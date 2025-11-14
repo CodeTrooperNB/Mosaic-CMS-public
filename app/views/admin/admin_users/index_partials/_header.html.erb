@@ -1,0 +1,10 @@
+<div class="flex items-center justify-between border-b border-border px-6 py-4">
+  <div class="flex items-center gap-2">
+    <%= admin_icon("users", class: "w-5 h-5 text-muted-foreground") %>
+    <h2 class="text-lg font-semibold text-card-foreground">Admin Users</h2>
+  </div>
+  <%= link_to new_admin_admin_user_path, class: "btn-primary-sm" do %>
+    <%= action_icon("create", class: "w-4 h-4 text-white") %>
+    New Admin User
+  <% end %>
+</div>

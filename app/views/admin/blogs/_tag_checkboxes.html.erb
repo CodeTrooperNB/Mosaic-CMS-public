@@ -1,0 +1,6 @@
+<%= hidden_field_tag "blog[blog_tag_ids][]", "" %>
+<div id="blog_tags_list" class="grid grid-cols-1 md:grid-cols-4 gap-2">
+  <% tags.each do |tag| %>
+    <%= render "admin/blogs/tag_checkbox", tag: tag, checked: Array(selected_tag_ids).map(&:to_i).include?(tag.id) %>
+  <% end %>
+</div>

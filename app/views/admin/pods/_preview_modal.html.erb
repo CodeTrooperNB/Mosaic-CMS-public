@@ -1,0 +1,24 @@
+<div data-admin--pod-preview-target="backdrop" class="hidden fixed inset-0 bg-black/50 z-40"></div>
+<div data-admin--pod-preview-target="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <!-- Constrain modal to viewport size -->
+  <!-- default to desktop (min laptop) -->
+  <div data-admin--pod-preview-target="frame" class="w-full max-w-[1366px] max-h-screen">
+    <div class="bg-white dark:bg-gray-900 border border-border rounded-lg shadow-xl overflow-hidden flex flex-col h-auto max-h-screen">
+      <!-- Header stays fixed; body below becomes vertically scrollable -->
+      <div class="flex items-center justify-between px-4 py-2 border-b border-border bg-muted/40 flex-shrink-0">
+        <div class="text-sm text-muted-foreground">Preview</div>
+        <div class="flex items-center gap-2">
+          <button class="btn-secondary-sm" data-action="click->admin--pod-preview#setDesktop"><%= status_icon("desktop", class:"w-4 h-4") %></button>
+          <button class="btn-secondary-sm" data-action="click->admin--pod-preview#setTablet"><%= status_icon("tablet", class:"w-4 h-4") %></button>
+          <button class="btn-secondary-sm" data-action="click->admin--pod-preview#setMobile"><%= status_icon("mobile", class:"w-4 h-4") %></button>
+          <button class="btn-danger-sm" data-action="click->admin--pod-preview#close"><%= action_icon("close", class:"w-4 h-4") %></button>
+        </div>
+      </div>
+
+      <!-- Body: allow vertical scrolling only, prevent horizontal scroll -->
+      <div class="p-4 bg-background overflow-y-auto overflow-x-hidden max-h-[calc(100vh-6rem)]">
+        <div data-admin--pod-preview-target="content" class="w-full"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+# Global application settings managed by the `config` gem.
+# Override any of these via environment variables or config/settings.local.yml.
+
+cms:
+  site_name: <%= ENV.fetch("CMS_SITE_NAME", "Mosaic CMS") %>
+  host: <%= ENV.fetch("RAILS_HOSTNAME", "localhost") %>
+  admin_path: <%= ENV.fetch("CMS_ADMIN_PATH", "/admin") %>
+  default_locale: <%= ENV.fetch("CMS_DEFAULT_LOCALE", "en") %>
+  available_locales: <%= ENV.fetch("CMS_AVAILABLE_LOCALES", "en").split(",") %>
+  time_zone: <%= ENV.fetch("CMS_TIME_ZONE", "UTC") %>
+  admin_email: <%= ENV.fetch("CMS_ADMIN_EMAIL", "admin@example.com") %>
+  theme: <%= ENV.fetch("CMS_THEME", "default") %>
+  cache_ttl_seconds: <%= Integer(ENV.fetch("CMS_CACHE_TTL", 300)) %>
+  media:
+    # Max upload size in MB for uploads through the admin UI
+    uploads_max_size_mb: <%= Integer(ENV.fetch("CMS_UPLOADS_MAX_SIZE_MB", 25)) %>
+    # Restrict to a subset of MIME types if desired (blank allows any supported by ActiveStorage)
+    allowed_mime_types: <%= ENV.fetch("CMS_ALLOWED_MIME_TYPES", "").split(",") %>
+  seo:
+    meta_title_suffix: "<%= ENV.fetch('CMS_SEO_TITLE_SUFFIX', ' | ' + ENV.fetch('CMS_SITE_NAME', 'Mosaic CMS')) %>"
+    default_meta_description: <%= ENV.fetch("CMS_SEO_DEFAULT_DESC", "Manage and publish content with Mosaic CMS.") %>
+    canonical_host: <%= ENV.fetch("CMS_SEO_CANONICAL_HOST", "https://#{ENV.fetch("RAILS_HOSTNAME", "localhost")}") %>
+    robots_index: <%= ENV.fetch("CMS_SEO_ROBOTS_INDEX", "true") == "true" %>
+  analytics:
+    google_tag_id: <%= ENV["GOOGLE_TAG_ID"] %>
+    plausible_domain: <%= ENV["PLAUSIBLE_DOMAIN"] %>
+  feature_flags:
+    enable_rich_text: <%= ENV.fetch("FF_ENABLE_RICH_TEXT", "true") == "true" %>
+    enable_image_cropping: <%= ENV.fetch("FF_ENABLE_IMAGE_CROPPING", "true") == "true" %>
+    enable_public_graphql_cache: <%= ENV.fetch("FF_ENABLE_PUBLIC_GRAPHQL_CACHE", "false") == "true" %>
+
+# Medicus Hub GraphQL client configuration (per integration guide)
+medicus:
+  client_id: <%= ENV["MEDICUS_CLIENT_ID"] %>
+  api_key: <%= ENV["MEDICUS_API_KEY"] %>
+  brand_host: <%= ENV.fetch("MEDICUS_BRAND_HOST", "peak.localhost:3000") %>
+  jwt_secret: <%= ENV["MEDICUS_JWT_SECRET"] %>
+  # Optional: supply a default customer token if your app manages it centrally; controllers can override per request.
+  default_customer_jwt: <%= ENV["MEDICUS_CUSTOMER_JWT"] %>
+  timeouts:
+    open_timeout: <%= Integer(ENV.fetch("MEDICUS_OPEN_TIMEOUT", 5)) %>
+    read_timeout: <%= Integer(ENV.fetch("MEDICUS_READ_TIMEOUT", 15)) %>
+  retries:
+    attempts: <%= Integer(ENV.fetch("MEDICUS_RETRY_ATTEMPTS", 2)) %>
+    base_backoff_seconds: <%= Integer(ENV.fetch("MEDICUS_RETRY_BACKOFF", 2)) %>
+  extra_headers:
+    # Comma-separated env var like: MEDICUS_EXTRA_HEADERS="X-Env=production,X-App=myapp"
+    all: <%= ENV.fetch("MEDICUS_EXTRA_HEADERS", "").split(",").map { _1.split("=") }.to_h rescue {} %>
+
+# Mailer defaults and SendGrid configuration
+mailer:
+  from_email: <%= ENV.fetch("MAILER_FROM", "noreply@#{ENV.fetch("RAILS_HOSTNAME", "example.com")}") %>
+  reply_to: <%= ENV.fetch("MAILER_REPLY_TO", ENV.fetch("MAILER_FROM", "support@#{ENV.fetch("RAILS_HOSTNAME", "example.com")}")) %>
+  delivery_method: <%= ENV.fetch("MAILER_DELIVERY_METHOD", "smtp") %>
+  domain: <%= ENV.fetch("MAILER_DOMAIN", ENV.fetch("RAILS_HOSTNAME", "example.com")) %>
+  intercept_emails_to: <%= ENV.fetch("MAILER_INTERCEPT_TO", "") %>
+
+sendgrid:
+  api_key: <%= ENV["SENDGRID_API_KEY"] %>
+  username: <%= ENV.fetch("SENDGRID_USERNAME", "apikey") %>
+  # Common SMTP settings for SendGrid
+  smtp:
+    address: <%= ENV.fetch("SENDGRID_SMTP_ADDRESS", "smtp.sendgrid.net") %>
+    port: <%= Integer(ENV.fetch("SENDGRID_SMTP_PORT", 587)) %>
+    authentication: <%= ENV.fetch("SENDGRID_SMTP_AUTH", "plain") %>
+    enable_starttls_auto: <%= ENV.fetch("SENDGRID_STARTTLS", "true") == "true" %>
+  # Optional features
+  sandbox_mode: <%= ENV.fetch("SENDGRID_SANDBOX_MODE", "false") == "true" %>
+  categories_default: <%= ENV.fetch("SENDGRID_CATEGORIES", "mosaic-cms").split(",") %>
+  ip_pool_name: <%= ENV["SENDGRID_IP_POOL"] %>
+  asm_group_id: <%= (gid = ENV["SENDGRID_ASM_GROUP_ID"]).present? ? Integer(gid) : nil %>
+
+# Bunny CDN/Storage (used by ActiveStorage Bunny service)
+bunny:
+  access_key: <%= ENV.fetch("BUNNY_ACCESS_KEY") %>
+  api_key: <%= ENV.fetch("BUNNY_API_KEY") %>
+  storage_zone: <%= ENV.fetch("BUNNY_STORAGE_ZONE") %>
+  region: <%= ENV.fetch("BUNNY_REGION") %>
+  cdn: <%= ENV.fetch("BUNNY_CDN_ENDPOINT") %>

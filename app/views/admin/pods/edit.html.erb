@@ -1,0 +1,84 @@
+<% content_for :page_title, "Edit Pod" %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= action_icon("edit", class: "w-5 h-5 text-muted-foreground") %>
+        <h1 class="text-lg font-semibold text-card-foreground">Edit <%= @pod.name.presence || @pod.pod_type.humanize %></h1>
+      </div>
+      <p class="text-sm text-muted-foreground mt-1">Update "<%= @pod.name.presence || @pod.pod_type.humanize %>" pod content</p>
+    </div>
+
+    <div class="p-6">
+      <% if @pod.errors.any? %>
+        <div class="mb-6 border border-destructive/20 bg-destructive/10 rounded-md p-4">
+          <div class="flex gap-3">
+            <%= status_icon("error", class: "w-5 h-5 text-destructive shrink-0 mt-0.5") %>
+            <div>
+              <h3 class="font-medium text-destructive text-sm">Please fix the following errors:</h3>
+              <ul class="mt-2 text-sm text-destructive space-y-1">
+                <% @pod.errors.full_messages.each do |msg| %>
+                  <li class="flex items-start gap-1">
+                    <span class="text-destructive mt-1">•</span>
+                    <%= msg %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div data-controller="admin--pod-preview"
+           data-admin--pod-preview-preview-url-value="<%= preview_admin_pods_url %>">
+        <%= form_with url: admin_pod_path(@pod), method: :patch, local: true, class: "space-y-6" do %>
+          <%= hidden_field_tag "pod[pod_type]", @pod.pod_type %>
+          <div class="form-group">
+            <label for="pod_name" class="form-label">Pod Name</label>
+            <input type="text" id="pod_name" name="pod[name]" value="<%= @pod.name %>" required
+                   class="form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @pod.errors[:name].present?}"
+                   placeholder="e.g., Homepage Hero Section" />
+            <% if @pod.errors[:name].present? %>
+              <p class="form-error"><%= @pod.errors[:name].first %></p>
+            <% end %>
+            <p class="form-help">Give this pod a descriptive name for easy identification</p>
+          </div>
+
+          <%= render "admin/pods/fields", schema: @schema, pod: @pod %>
+
+          <div class="form-group">
+            <label for="pod_definition" class="form-label">Advanced: Raw JSON (optional)</label>
+            <textarea id="pod_definition" name="pod[definition]"
+                      class="form-textarea h-32 font-mono text-sm" readonly><%= (@pod.definition || {}).to_json %></textarea>
+            <p class="form-help">Raw JSON definition - overrides dynamic fields when provided</p>
+          </div>
+
+          <div class="flex items-center justify-start gap-3 pt-6 border-t border-border">
+            <button type="button" form="" class="btn-secondary-sm" data-action="click->admin--pod-preview#open">Preview</button>
+            <button type="submit" class="btn-primary-sm">
+              <%= action_icon("save", class: "w-4 h-4") %>
+              Update Pod
+            </button>
+            <%= link_to "Cancel", admin_pods_path, class: "btn-secondary-sm" %>
+          </div>
+        <% end %>
+        <!-- Preview Modal -->
+        <%= render "admin/pods/preview_modal" %>
+        <!-- /Preview Modal -->
+      </div>
+
+      <div class="mt-6 pt-6 border-t border-border">
+        <div class="flex items-center justify-between">
+          <div class="text-sm text-muted-foreground">Danger zone</div>
+          <%= button_to admin_pod_path(@pod), method: :delete,
+                        form: { data: { turbo_confirm: "Delete this pod? This cannot be undone." } },
+                        class: "btn-danger-sm" do %>
+            <%= action_icon("delete", class: "w-4 h-4 text-white") %>
+            Delete Pod
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

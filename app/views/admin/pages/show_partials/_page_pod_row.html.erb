@@ -1,0 +1,28 @@
+<div id="<%= dom_id(pp) %>" data-id="<%= pp.id %>" class="flex items-center justify-between p-4 border border-border rounded-md bg-muted hover:bg-muted/80 transition-colors">
+  <div class="flex items-center gap-3">
+    <div data-handle class="cursor-move select-none text-muted-foreground hover:text-card-foreground p-1" title="Drag to reorder">⋮⋮</div>
+    <div class="w-8 h-8 rounded-full bg-primary/10 text-primary text-sm font-semibold flex items-center justify-center" data-position-badge>
+      <%= pp.position || '?' %>
+    </div>
+    <div>
+      <div class="flex items-center gap-2">
+        <%= admin_icon("pods", class: "w-4 h-4 text-muted-foreground") %>
+        <span class="font-medium text-card-foreground"><%= pp.pod.pod_type.humanize %></span>
+      </div>
+      <div class="text-sm text-muted-foreground"><%= pp.pod.name %></div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <%= link_to edit_admin_pod_path(pp.pod_id),
+                class: "p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded transition-colors",
+                title: "Edit pod" do %>
+      <%= action_icon("edit", class: "w-4 h-4") %>
+    <% end %>
+    <%= button_to admin_page_page_pod_path(page, pp), method: :delete,
+                  form: { data: { turbo_confirm: "Remove this pod from the page?" } },
+                  class: "p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded transition-colors" do %>
+      <%= action_icon("delete", class: "w-4 h-4") %>
+    <% end %>
+  </div>
+</div>

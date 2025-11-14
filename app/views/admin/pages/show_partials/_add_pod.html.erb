@@ -1,0 +1,29 @@
+<!-- Add Pod -->
+<div class="bg-card border border-border rounded-lg shadow-sm">
+  <div class="border-b border-border px-6 py-4">
+    <div class="flex items-center gap-2">
+      <%= action_icon("create", class: "w-5 h-5 text-muted-foreground") %>
+      <h2 class="text-lg font-semibold text-card-foreground">Add Existing Pod</h2>
+    </div>
+    <p class="text-sm text-muted-foreground mt-1">Click Add on a reusable pod to link it to this page</p>
+  </div>
+
+  <div class="p-6">
+    <div id="available_pods_grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% @available_pods.each do |pod| %>
+        <%= render "admin/pages/show_partials/available_pod_card", page: @page, pod: pod %>
+      <% end if @available_pods.any? %>
+    </div>
+
+    <% if @available_pods.blank? %>
+      <div id="pods_empty" class="text-center py-12">
+        <%= admin_icon("pods", class: "w-12 h-12 mx-auto mb-4 text-muted-foreground") %>
+        <div class="prose prose-sm max-w-none">
+          <h3 class="text-card-foreground font-medium">No available pods</h3>
+          <p class="text-muted-foreground">Create more pods to build your page content.</p>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
+</div>

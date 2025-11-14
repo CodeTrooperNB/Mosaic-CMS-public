@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" role="img" aria-hidden="true" focusable="false">
+  <title>Drag handle</title>
+  <g fill="currentColor">
+    <!-- left column -->
+    <circle cx="5" cy="3" r="1"/>
+    <circle cx="5" cy="8" r="1"/>
+    <circle cx="5" cy="13" r="1"/>
+    <!-- right column -->
+    <circle cx="11" cy="3" r="1"/>
+    <circle cx="11" cy="8" r="1"/>
+    <circle cx="11" cy="13" r="1"/>
+  </g>
+</svg>

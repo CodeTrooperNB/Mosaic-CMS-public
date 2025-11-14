@@ -1,0 +1,31 @@
+<!-- Content Pods -->
+<div class="bg-card border border-border rounded-lg shadow-sm">
+  <div class="border-b border-border px-6 py-4">
+    <div class="flex items-center gap-2">
+      <%= admin_icon("pods", class: "w-5 h-5 text-muted-foreground") %>
+      <h2 class="text-lg font-semibold text-card-foreground">Content Pods</h2>
+      <span id="page_pods_count" class="text-sm text-muted-foreground">(<%= @page_pods.count %>)</span>
+    </div>
+    <p class="text-sm text-muted-foreground mt-1">Pods linked to this page, ordered by position</p>
+  </div>
+
+  <div class="p-6">
+    <div data-controller="admin--pod-sorter" data-admin--pod-sorter-page-id-value="<%= @page.id %>">
+      <div id="page_pods_list" data-admin--pod-sorter-target="list" class="space-y-3">
+        <% @page_pods.each do |pp| %>
+          <%= render "admin/pages/show_partials/page_pod_row", page: @page, pp: pp %>
+        <% end %>
+      </div>
+    </div>
+
+    <% if @page_pods.blank? %>
+      <div id="page_pods_empty" class="text-center py-12">
+        <%= admin_icon("pods", class: "w-12 h-12 mx-auto mb-4 text-muted-foreground") %>
+        <div class="prose prose-sm max-w-none">
+          <h3 class="text-card-foreground font-medium">No pods linked</h3>
+          <p class="text-muted-foreground">Add pods to build your page content.</p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

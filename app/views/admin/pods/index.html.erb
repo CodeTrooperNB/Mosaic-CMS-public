@@ -1,0 +1,101 @@
+<% content_for :page_title, "Pods" %>
+
+<div class="space-y-6">
+  <!-- Stats -->
+  <div class="grid grid-cols-3 gap-4">
+    <div class="bg-card border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</div>
+          <div class="text-2xl font-bold text-card-foreground"><%= @stats[:total_pods] %></div>
+        </div>
+        <%= admin_icon("pods", class: "w-8 h-8 text-muted-foreground") %>
+      </div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Reusable</div>
+          <div class="text-2xl font-bold text-primary"><%= @stats[:reusable_pods] %></div>
+        </div>
+        <%= admin_icon("pods", class: "w-8 h-8 text-primary") %>
+      </div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4 hover:shadow-sm transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">In Use</div>
+          <div class="text-2xl font-bold text-success"><%= @stats[:in_use_pods] %></div>
+        </div>
+        <%= admin_icon("pods", class: "w-8 h-8 text-success") %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pods -->
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="flex items-center justify-between border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= admin_icon("pods", class: "w-5 h-5 text-muted-foreground") %>
+        <h2 class="text-lg font-semibold text-card-foreground">Pods</h2>
+      </div>
+      <%= link_to new_admin_pod_path, class: "btn-primary-sm" do %>
+        <%= action_icon("create", class: "w-4 h-4 text-white") %>
+        Create Pod
+      <% end %>
+    </div>
+    <div class="p-6">
+      <% if @pods.any? %>
+        <div class="space-y-3">
+          <% @pods.each do |p| %>
+            <div class="flex items-center justify-between p-4 border border-border rounded-md bg-muted hover:bg-muted/80 transition-colors group">
+              <div class="flex items-center gap-4 min-w-0 flex-1">
+                <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <%= admin_icon(p[:icon], class: "w-4 h-4") %>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="font-medium text-card-foreground truncate"><%= p[:title] %></div>
+                  <div class="text-sm text-muted-foreground truncate"><%= p[:description] %></div>
+
+                  <% if p[:pages]&.any? %>
+                    <div class="flex flex-wrap gap-1 mt-2">
+                      <% p[:pages].each do |page| %>
+                        <%= link_to page.display_title,
+                                    admin_page_path(page),
+                                    class: "inline-flex items-center px-2 py-1 text-xs rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors",
+                                    title: "View page: #{page.display_title}" %>
+                      <% end %>
+                    </div>
+                  <% else %>
+                    <div class="text-xs text-muted-foreground/70 mt-1">Not used on any pages</div>
+                  <% end %>
+                </div>
+                <div class="text-xs text-muted-foreground shrink-0"><%= p[:time] %></div>
+              </div>
+
+              <div class="flex items-center gap-1 ml-4">
+                <%= link_to edit_admin_pod_path(p[:id]),
+                            class: "p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded transition-colors",
+                            title: "Edit pod" do %>
+                  <%= action_icon("edit", class: "w-4 h-4") %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-12">
+          <%= admin_icon("pods", class: "w-12 h-12 mx-auto mb-4 text-muted-foreground") %>
+          <div class="prose prose-sm max-w-none">
+            <h3 class="text-card-foreground font-medium">No pods yet</h3>
+            <p class="text-muted-foreground">Create your first pod to get started with reusable content.</p>
+          </div>
+          <%= link_to new_admin_pod_path, class: "btn-primary-sm mt-4" do %>
+            <%= action_icon("create", class: "w-4 h-4") %>
+            Create First Pod
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

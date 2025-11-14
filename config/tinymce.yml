@@ -1,0 +1,16 @@
+# TinyMCE configuration
+default:
+  license_key: 'gpl'  # Use GPL license for open source
+  plugins:
+    - lists
+  toolbar:
+    - undo redo
+    - bold italic underline
+    - bullist numlist
+  menubar: false
+  statusbar: false
+  branding: false
+  height: 300
+  convert_urls: false
+  relative_urls: false
+  remove_script_host: false

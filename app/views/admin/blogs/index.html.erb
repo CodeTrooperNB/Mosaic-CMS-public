@@ -1,0 +1,155 @@
+<% content_for :page_title, "Blogs" %>
+
+<div class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</div>
+      <div class="text-2xl font-bold text-card-foreground mt-1"><%= @stats[:total] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Visible</div>
+      <div class="text-2xl font-bold text-card-foreground mt-1"><%= @stats[:visible] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Published</div>
+      <div class="text-2xl font-bold text-success mt-1"><%= @stats[:published] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Scheduled</div>
+      <div class="text-2xl font-bold text-warning mt-1"><%= @stats[:scheduled] %></div>
+    </div>
+  </div>
+
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= admin_icon("posts", class: "w-5 h-5 text-muted-foreground") %>
+        <h2 class="text-lg font-semibold text-card-foreground">Blog Posts</h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <%= link_to admin_blogs_path, class: "btn-secondary-sm" do %>
+          Reset Filters
+        <% end %>
+        <%= link_to new_admin_blog_path, class: "btn-primary-sm" do %>
+          <%= action_icon("create", class: "w-4 h-4 text-white") %>
+          New Blog
+        <% end %>
+      </div>
+    </div>
+
+    <div class="border-b border-border px-6 py-4 bg-muted/40">
+      <%= form_with url: admin_blogs_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-5 gap-4" do |f| %>
+        <div>
+          <label for="category" class="form-label text-xs">Category</label>
+          <%= select_tag :category,
+                         options_for_select([["All", ""]] + @blog_categories.map { |c| [c.name, c.slug] }, params[:category]),
+                         class: "form-select" %>
+        </div>
+        <div>
+          <label for="tag" class="form-label text-xs">Tag</label>
+          <%= select_tag :tag,
+                         options_for_select([["All", ""]] + @blog_tags.map { |t| [t.name, t.slug] }, params[:tag]),
+                         class: "form-select" %>
+        </div>
+        <div>
+          <label for="visible" class="form-label text-xs">Visibility</label>
+          <%= select_tag :visible,
+                         options_for_select([["All", ""], ["Visible", "true"], ["Hidden", "false"]], params[:visible]),
+                         class: "form-select" %>
+        </div>
+        <div>
+          <label for="schedule" class="form-label text-xs">Publish State</label>
+          <%= select_tag :schedule,
+                         options_for_select([["All", ""], ["Published", "published"], ["Scheduled", "scheduled"]], params[:schedule]),
+                         class: "form-select" %>
+        </div>
+        <div class="flex items-end">
+          <%= f.submit "Apply", class: "btn-primary-sm w-full" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-muted/40">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Title</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Category</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Tags</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="bg-card divide-y divide-border">
+        <% @blogs.each do |blog| %>
+          <tr class="hover:bg-muted/40 transition-colors">
+            <td class="px-6 py-4">
+              <div class="flex flex-col">
+                <span class="text-sm font-medium text-card-foreground"><%= blog.display_title %></span>
+                <span class="text-xs text-muted-foreground">By <%= blog.author_name %></span>
+                <span class="text-xs text-muted-foreground">Updated <%= time_ago_in_words(blog.updated_at) %> ago</span>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-sm text-card-foreground"><%= blog.blog_category_name %></td>
+            <td class="px-6 py-4">
+              <div class="flex flex-wrap gap-1">
+                <% blog.blog_tags.each do |tag| %>
+                  <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary"><%= tag.name %></span>
+                <% end %>
+                <% if blog.blog_tags.empty? %>
+                  <span class="text-xs text-muted-foreground">No tags</span>
+                <% end %>
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <% if blog.displayable? %>
+                  <span class="inline-flex items-center gap-1 text-xs font-medium text-success">
+                    <%= status_icon("published", class: "w-4 h-4") %>
+                    Published
+                  </span>
+              <% elsif blog.scheduled? && blog.visible? %>
+                  <span class="inline-flex items-center gap-1 text-xs font-medium text-warning">
+                    <%= status_icon("scheduled", class: "w-4 h-4") %>
+                    Scheduled
+                  </span>
+              <% else %>
+                  <span class="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                    <%= status_icon("draft", class: "w-4 h-4") %>
+                    Draft
+                  </span>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-right text-sm">
+              <div class="flex items-center justify-end gap-2">
+                <%= link_to admin_blog_path(blog),
+                            class: "p-2 rounded text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors",
+                            title: "View" do %>
+                  <%= action_icon("show", class: "w-4 h-4") %>
+                <% end %>
+                <%= link_to edit_admin_blog_path(blog),
+                            class: "p-2 rounded text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors",
+                            title: "Edit" do %>
+                  <%= action_icon("edit", class: "w-4 h-4") %>
+                <% end %>
+                <%= button_to admin_blog_path(blog),
+                              method: :delete,
+                              data: { turbo_confirm: "Delete this blog post?" },
+                              class: "p-2 rounded text-destructive hover:bg-destructive/10 transition-colors" do %>
+                  <%= action_icon("delete", class: "w-4 h-4") %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @blogs.empty? %>
+          <tr>
+            <td colspan="5" class="px-6 py-10 text-center text-sm text-muted-foreground">
+              No blog posts found. Try adjusting filters or create a new post.
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

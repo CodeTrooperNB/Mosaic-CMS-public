@@ -1,0 +1,102 @@
+<%# Shared form for new/edit Page %>
+<%= form_with model: [:admin, @page], local: true, class: "space-y-6" do |f| %>
+  <div class="form-group">
+    <%= f.label :title, class: "form-label" %>
+    <%= f.text_field :title, required: true,
+                     class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @page.errors[:title].present?}" %>
+    <% if @page.errors[:title].present? %>
+      <p class="form-error"><%= @page.errors[:title].first %></p>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :slug, class: "form-label" %>
+    <%= f.text_field :slug,
+                     class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @page.errors[:slug].present?}" %>
+    <% if @page.persisted? %>
+      <p class="form-help">Current URL: <code class="bg-muted px-1 py-0.5 rounded text-xs text-muted-foreground">/<%= @page.slug || @page.id %></code></p>
+    <% else %>
+      <p class="form-help">The URL path for this page (optional - will be generated from title)</p>
+    <% end %>
+    <% if @page.errors[:slug].present? %>
+      <p class="form-error"><%= @page.errors[:slug].first %></p>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :menu_title, class: "form-label" %>
+    <div class="text-xs text-muted-foreground mb-2">Optional alternative label for navigation menus</div>
+    <%= f.text_field :menu_title, placeholder: "Menu label (defaults to Title)", class: "form-input" %>
+  </div>
+
+  <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="form-group">
+      <%= f.label :view_template, class: "form-label" %>
+      <div class="text-xs text-muted-foreground mb-2">Select the view template used by the renderer</div>
+      <%= f.select :view_template,
+                   options_for_select([["Home", "home"], ["Show", "show"]], @page.view_template),
+                   { include_blank: "Default" },
+                   { class: "form-select" } %>
+    </div>
+    <div class="form-group">
+      <%= f.label :redirect_path, class: "form-label" %>
+      <div class="text-xs text-muted-foreground mb-2">If set, requests to this page will redirect to this path. Example: <code>/hello_world or /hello_world/:id</code></div>
+      <%= f.text_field :redirect_path, placeholder: "/destination/path", class: "form-input" %>
+    </div>
+  </div>
+
+  <div class="form-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="form-group">
+      <%= f.check_box :show_in_menu, class: "form-checkbox" %>
+      <%= f.label :show_in_menu, "Show in navigation menus", class: "form-label-inline !mb-0 font-medium" %>
+    </div>
+    <div class="form-group">
+      <%= f.check_box :show_in_footer, class: "form-checkbox" %>
+      <%= f.label :show_in_footer, "Show in footer", class: "form-label-inline !mb-0 font-medium" %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.check_box :skip_to_first_child, class: "form-checkbox" %>
+    <%= f.label :skip_to_first_child, "Automatically redirect to first child", class: "form-label-inline !mb-0 font-medium" %>
+    <p class="form-help">Useful for section landing pages</p>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :meta_description, "SEO Description", class: "form-label" %>
+    <%= f.text_area :meta_description, rows: 3,
+                    placeholder: "Brief description for search engines (150-160 characters recommended)",
+                    class: "form-textarea" %>
+    <p class="form-help">This will be used in search engine results</p>
+  </div>
+
+  <div class="flex items-center gap-3 p-4 bg-muted rounded-md">
+    <%= f.check_box :published, class: "form-checkbox" %>
+    <div>
+      <%= f.label :published, (@page.persisted? ? "Published" : "Publish immediately"), class: "form-label-inline !mb-0 font-medium" %>
+      <div class="flex items-center gap-2 mt-0.5">
+        <% if @page.published? %>
+          <span class="text-xs text-success flex items-center gap-1">
+            <%= status_icon("published", class: "w-3 h-3") %>
+            Currently live
+          </span>
+        <% else %>
+          <span class="text-xs text-warning flex items-center gap-1">
+            <%= status_icon("draft", class: "w-3 h-3") %>
+            Currently draft
+          </span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-start gap-3 pt-6 border-t border-border">
+    <% if @page.persisted? %>
+      <%= f.submit "Update Page", class: "btn-primary-sm" %>
+      <%= link_to "Cancel", admin_page_path(@page), class: "btn-secondary-sm" %>
+    <% else %>
+      <%= f.submit "Create Page", class: "btn-primary-sm" %>
+      <%= link_to "Cancel", admin_pages_path, class: "btn-secondary-sm" %>
+    <% end %>
+  </div>
+<% end %>

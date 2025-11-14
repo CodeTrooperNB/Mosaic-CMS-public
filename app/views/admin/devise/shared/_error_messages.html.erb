@@ -1,0 +1,21 @@
+<% if resource.errors.any? %>
+  <div class="rounded-lg bg-destructive/10 border border-destructive/20 p-4 mb-6">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <%= admin_icon('alert-circle', class: 'h-5 w-5 text-destructive mt-0.5') if respond_to?(:admin_icon) %>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-destructive-foreground">
+          <%= pluralize(resource.errors.count, "error") %> prohibited this from being saved:
+        </h3>
+        <div class="mt-2">
+          <ul class="list-disc list-inside text-sm text-destructive-foreground space-y-1">
+            <% resource.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

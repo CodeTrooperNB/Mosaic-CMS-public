@@ -1,0 +1,26 @@
+<%# locals: page, pod %>
+<% title = pod.name %>
+<% subtitle = pod.pod_type.humanize %>
+
+
+<div id="<%= dom_id(pod, :available) %>" class="border border-border rounded-md bg-muted hover:bg-muted/80 transition-colors p-4 flex flex-col-2 justify-between">
+  <div class="min-w-0">
+    <div class="flex items-center gap-2">
+      <%= admin_icon("pods", class: "w-4 h-4 text-muted-foreground") %>
+      <div class="font-medium text-card-foreground truncate"><%= title %></div>
+    </div>
+    <% if subtitle.present? %>
+      <div class="text-sm text-muted-foreground mt-2 line-clamp-2"><%= subtitle %></div>
+    <% end %>
+  </div>
+
+  <div class="mt-2">
+    <%= button_to admin_page_page_pods_path(page),
+                  method: :post,
+                  params: { pod_id: pod.id },
+                  class: "btn-primary-sm inline-flex items-center gap-2" do %>
+      <%= action_icon("add", class: "w-4 h-4 text-white") %>
+      Add
+    <% end %>
+  </div>
+</div>

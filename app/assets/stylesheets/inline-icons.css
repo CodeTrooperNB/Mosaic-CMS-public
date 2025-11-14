@@ -1,0 +1,89 @@
+/* === SVG ICON STYLES === */
+@layer components {
+  /* Base inline SVG styling */
+  .inline-svg {
+    @apply inline-block;
+    fill: currentColor;
+  }
+
+  /* Icon size variants */
+  .icon {
+    @apply inline-block flex-shrink-0;
+    fill: currentColor;
+  }
+
+  .icon-xs {
+    @apply w-3 h-3;
+  }
+
+  .icon-sm {
+    @apply w-4 h-4;
+  }
+
+  .icon-md {
+    @apply w-5 h-5;
+  }
+
+  .icon-lg {
+    @apply w-6 h-6;
+  }
+
+  .icon-xl {
+    @apply w-8 h-8;
+  }
+
+  .icon-2xl {
+    @apply w-10 h-10;
+  }
+
+  /* Status icon colors */
+  .status-published, .status-active, .status-success {
+    @apply text-success;
+  }
+
+  .status-draft, .status-inactive, .status-pending {
+    @apply text-warning;
+  }
+
+  .status-error, .status-failed {
+    @apply text-destructive;
+  }
+
+  .status-warning {
+    @apply text-warning;
+  }
+
+  /* Action icon styling */
+  .action-edit {
+    @apply text-primary hover:text-primary/80;
+  }
+
+  .action-delete, .action-destroy {
+    @apply text-destructive hover:text-destructive/80;
+  }
+
+  .action-view, .action-show {
+    @apply text-muted-foreground hover:text-foreground;
+  }
+
+  .action-add, .action-new, .action-create {
+    @apply text-success hover:text-success/80;
+  }
+
+  .action-copy, .action-duplicate {
+    @apply text-muted-foreground hover:text-foreground;
+  }
+
+  .action-settings, .action-configure {
+    @apply text-muted-foreground hover:text-foreground;
+  }
+
+  .action-search, .action-filter, .action-sort {
+    @apply text-muted-foreground hover:text-foreground;
+  }
+
+  /* Logo styling */
+  .logo {
+    @apply block;
+  }
+}

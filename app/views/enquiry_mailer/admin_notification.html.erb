@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Enquiry Notification</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .email-header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      padding: 40px 30px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .email-header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .email-header .subtitle {
+      margin: 8px 0 0 0;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    .email-body {
+      padding: 40px 30px;
+    }
+    .email-body h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #333333;
+    }
+    .email-body p {
+      margin: 16px 0;
+      color: #666666;
+    }
+    .enquiry-details {
+      background-color: #f8f9fa;
+      border: 1px solid #e9ecef;
+      padding: 20px;
+      margin: 24px 0;
+      border-radius: 6px;
+    }
+    .detail-row {
+      display: table;
+      width: 100%;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e9ecef;
+    }
+    .detail-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #333333;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .detail-value {
+      color: #666666;
+      font-size: 14px;
+      word-break: break-word;
+    }
+    .message-box {
+      background-color: #ffffff;
+      border: 2px solid #e9ecef;
+      padding: 16px;
+      margin-top: 8px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      margin: 24px 0;
+      text-align: center;
+    }
+    .cta-button:hover {
+      opacity: 0.9;
+    }
+    .email-footer {
+      background-color: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #999999;
+    }
+    .email-footer p {
+      margin: 8px 0;
+    }
+    .timestamp {
+      font-size: 13px;
+      color: #999999;
+      margin-top: 20px;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        margin: 0;
+        border-radius: 0;
+      }
+      .email-header {
+        padding: 30px 20px;
+      }
+      .email-header h1 {
+        font-size: 24px;
+      }
+      .email-body {
+        padding: 30px 20px;
+      }
+      .enquiry-details {
+        padding: 15px;
+      }
+      .cta-button {
+        display: block;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1>New Enquiry Received</h1>
+      <p class="subtitle"><%= @site_name %> Admin Notification</p>
+    </div>
+
+    <div class="email-body">
+      <h2>You have received a new enquiry</h2>
+
+      <p>A new enquiry has been submitted through your website contact form.</p>
+
+      <div class="enquiry-details">
+        <div class="detail-row">
+          <div class="detail-label">Full Name</div>
+          <div class="detail-value"><%= @enquiry.name %></div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-label">Email Address</div>
+          <div class="detail-value">
+            <a href="mailto:<%= @enquiry.email %>" style="color: #667eea; text-decoration: none;">
+              <%= @enquiry.email %>
+            </a>
+          </div>
+        </div>
+
+        <% if @enquiry.phone.present? %>
+          <div class="detail-row">
+            <div class="detail-label">Phone Number</div>
+            <div class="detail-value"><%= @enquiry.phone %></div>
+          </div>
+        <% end %>
+
+        <% if @enquiry.company.present? %>
+          <div class="detail-row">
+            <div class="detail-label">Company</div>
+            <div class="detail-value"><%= @enquiry.company %></div>
+          </div>
+        <% end %>
+
+        <% if @enquiry.subject.present? %>
+          <div class="detail-row">
+            <div class="detail-label">Subject</div>
+            <div class="detail-value"><%= @enquiry.subject %></div>
+          </div>
+        <% end %>
+
+        <% if @enquiry.message.present? %>
+          <div class="detail-row">
+            <div class="detail-label">Message</div>
+            <div class="detail-value">
+              <div class="message-box"><%= @enquiry.message %></div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if @enquiry.form_data.present? && @enquiry.form_data.keys.any? { |k| !%w[message subject phone company].include?(k) } %>
+          <% @enquiry.form_data.except("message", "subject", "phone", "company").each do |key, value| %>
+            <div class="detail-row">
+              <div class="detail-label"><%= key.to_s.titleize %></div>
+              <div class="detail-value"><%= value %></div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <center>
+        <a href="<%= admin_enquiry_url(@enquiry) %>" class="cta-button">
+          View in Admin Panel
+        </a>
+      </center>
+
+      <p class="timestamp">
+        <strong>Received:</strong> <%= @enquiry.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      </p>
+    </div>
+
+    <div class="email-footer">
+      <p>&copy; <%= Time.current.year %> <%= @site_name %>. All rights reserved.</p>
+      <p>This is an automated admin notification from your CMS.</p>
+    </div>
+  </div>
+</body>
+</html>

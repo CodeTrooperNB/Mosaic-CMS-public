@@ -1,0 +1,175 @@
+<% content_for :page_title, @blog.title %>
+
+<div class="space-y-6">
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between border-b border-border px-6 py-4">
+      <div>
+        <h2 class="text-xl font-semibold text-card-foreground"><%= @blog.title %></h2>
+        <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mt-2">
+          <span>Category: <strong class="text-card-foreground"><%= @blog.blog_category_name %></strong></span>
+          <span>Author: <strong class="text-card-foreground"><%= @blog.author_name %></strong></span>
+          <span>Last updated <%= time_ago_in_words(@blog.updated_at) %> ago</span>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <%= link_to edit_admin_blog_path(@blog), class: "" do %>
+          <%= action_icon("edit", class: "w-4 h-4") %>
+        <% end %>
+        <%= button_to admin_blog_path(@blog), method: :delete, data: { turbo_confirm: "Delete this blog post?" }, class: "btn-destructive-sm" do %>
+          <%= action_icon("delete", class: "w-4 h-4") %>
+        <% end %>
+      </div>
+    </div>
+    <% if @blog.cover_image.attached? %>
+      <div class="px-6">
+        <div class="overflow-hidden rounded-lg border border-border bg-muted">
+          <%= image_tag @blog.cover_image_variant(:hero), alt: @blog.title, class: "w-full h-full object-cover" %>
+        </div>
+      </div>
+    <% end %>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
+      <div class="space-y-2">
+        <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</div>
+        <% if @blog.displayable? %>
+          <span class="badge-success">
+            <%= status_icon("published", class: "w-4 h-4") %>
+            Published
+          </span>
+        <% elsif @blog.scheduled? && @blog.visible? %>
+          <span class="badge-warning">
+            <%= status_icon("scheduled", class: "w-4 h-4") %>
+            Scheduled for <%= l @blog.published_at, format: :long %>
+          </span>
+        <% elsif @blog.visible? %>
+          <span class="badge-info">
+            <%= status_icon("draft", class: "w-4 h-4") %>
+            Awaiting publish date
+          </span>
+        <% else %>
+          <span class="badge-secondary">
+            <%= status_icon("draft", class: "w-4 h-4") %>
+            Hidden
+          </span>
+        <% end %>
+      </div>
+      <div class="space-y-2">
+        <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Publish Date</div>
+        <div class="text-sm text-card-foreground">
+          <% if @blog.published_at.present? %>
+            <%= l @blog.published_at, format: :long %>
+          <% else %>
+            <span class="text-muted-foreground">Not scheduled</span>
+          <% end %>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Tags</div>
+        <div class="flex flex-wrap gap-2">
+          <% if @blog.blog_tags.any? %>
+            <% @blog.blog_tags.each do |tag| %>
+              <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary"><%= tag.name %></span>
+            <% end %>
+          <% else %>
+            <span class="text-sm text-muted-foreground">No tags assigned</span>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">SEO</div>
+        <div class="text-sm text-card-foreground">
+          <div class="mb-2">
+            <span class="font-medium text-muted-foreground block">Title</span>
+            <span><%= @blog.seo_title.presence || @blog.title %></span>
+          </div>
+          <div>
+            <span class="font-medium text-muted-foreground block">Description</span>
+            <span><%= @blog.seo_description.presence || "—" %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="border-b border-border px-6 py-4">
+      <h3 class="text-lg font-semibold text-card-foreground">Content</h3>
+    </div>
+    <div class="prose prose-primary max-w-none p-6">
+      <%= @blog.content %>
+    </div>
+  </div>
+
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="flex items-center justify-between border-b border-border px-6 py-4">
+      <div>
+        <h3 class="text-lg font-semibold text-card-foreground">Comments</h3>
+        <p class="text-sm text-muted-foreground">Manage reader feedback on this post.</p>
+      </div>
+      <span class="badge-gray"><%= pluralize(@comments.count, "comment") %></span>
+    </div>
+
+    <% if @comments.any? %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-border">
+          <thead class="bg-muted/40">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Author</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Comment</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Submitted</th>
+            <th class="px-6 py-3 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Visible</th>
+            <th class="px-6 py-3 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
+          </tr>
+          </thead>
+          <tbody class="bg-card divide-y divide-border">
+          <% @comments.each do |comment| %>
+            <tr>
+              <td class="px-6 py-4 align-top">
+                <div class="text-sm font-medium text-card-foreground"><%= comment.display_name %></div>
+                <% if comment.author_last_name.present? %>
+                  <div class="text-xs text-muted-foreground">Last name: <%= comment.author_last_name %></div>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-card-foreground align-top">
+                <div class="whitespace-pre-wrap"><%= truncate(comment.body, length: 140) %></div>
+              </td>
+              <td class="px-6 py-4 text-sm text-muted-foreground align-top">
+                <time datetime="<%= comment.created_at.iso8601 %>"><%= l comment.created_at, format: :long %></time>
+              </td>
+              <td class="px-6 py-4 text-sm align-top">
+                <% if comment.visible? %>
+                  <span class="badge-success">Visible</span>
+                <% else %>
+                  <span class="badge-gray">Hidden</span>
+                <% end %>
+              </td>
+              <td class="px-6 py-4 text-sm text-right align-top">
+                <div class="flex items-center justify-end gap-2">
+                  <%= button_to admin_blog_comment_path(comment),
+                                method: :patch,
+                                params: { blog_comment: { visible: !comment.visible? } },
+                                class: "p-2 rounded text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors",
+                                title: (comment.visible? ? "Hide comment" : "Show comment") do %>
+                    <%= status_icon(comment.visible? ? "inactive" : "active", class: "w-4 h-4") %>
+                  <% end %>
+                  <%= button_to admin_blog_comment_path(comment),
+                                method: :delete,
+                                data: { turbo_confirm: "Delete this comment?" },
+                                class: "p-2 rounded text-destructive hover:bg-destructive/10 transition-colors",
+                                title: "Delete comment" do %>
+                    <%= action_icon("delete", class: "w-4 h-4") %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="px-6 py-10 text-center text-sm text-muted-foreground">
+        No reader comments yet.
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,227 @@
+<% if local_assigns[:schema] %>
+  <% builder = Admin::PodFormBuilder.new(schema: @schema) %>
+  <% fields = builder.supported_fields %>
+  <% if fields.any? %>
+    <div id="pod-fields" class="space-y-4">
+      <h3 class="font-medium text-card-foreground border-b border-border pb-2">Content Fields</h3>
+      <% fields.each do |f| %>
+        <% current_val = (local_assigns[:pod]&.definition.presence || {})[f[:name]] %>
+
+        <% if f[:type] == "array" %>
+          <!-- Array Field -->
+          <%= render "admin/pods/array_field",
+                     field_name: f[:name],
+                     field_config: f,
+                     current_items: current_val || [] %>
+        <% elsif f[:type] == "object" %>
+          <!-- Object Field -->
+          <%= render "admin/pods/object_field",
+                     field_name: f[:name],
+                     field_config: f,
+                     current_data: current_val || {} %>
+        <% else %>
+          <!-- Non-array fields -->
+          <% case f[:type]
+             when "text" %>
+            <div class="form-group">
+              <label for="pod_fields_<%= f[:name] %>" class="form-label"><%= f[:label] %></label>
+              <input type="text" id="pod_fields_<%= f[:name] %>" name="pod[fields][<%= f[:name] %>]"
+                     class="form-input" placeholder="<%= f[:placeholder] %>" value="<%= current_val || "" %>" />
+              <% if f[:help] %>
+                <p class="form-help"><%= f[:help] %></p>
+              <% end %>
+            </div>
+          <% when "select" %>
+            <div class="form-group">
+              <label for="pod_fields_<%= f[:name] %>" class="form-label"><%= f[:label] %></label>
+              <select id="pod_fields_<%= f[:name] %>" name="pod[fields][<%= f[:name] %>]" class="form-select">
+                <% (f[:options] || []).each do |opt| %>
+                  <option value="<%= opt["value"] %>" <%= (opt["value"].to_s == current_val.to_s) ? 'selected' : '' %>>
+                    <%= opt["label"] || opt["value"].to_s %>
+                  </option>
+                <% end %>
+              </select>
+              <% if f[:help] %>
+                <p class="form-help"><%= f[:help] %></p>
+              <% end %>
+            </div>
+          <% when "boolean" %>
+            <div class="form-group">
+              <div class="flex items-center gap-3 p-4 bg-muted rounded-md">
+                <input type="hidden" name="pod[fields][<%= f[:name] %>]" value="0" />
+                <input type="checkbox" id="pod_fields_<%= f[:name] %>" name="pod[fields][<%= f[:name] %>]"
+                       value="1" class="form-checkbox" <%= (current_val == true) ? 'checked' : '' %> />
+                <div>
+                  <label for="pod_fields_<%= f[:name] %>" class="form-label-inline !mb-0 font-medium"><%= f[:label] %></label>
+                  <% if f[:help] %>
+                    <p class="text-xs text-muted-foreground"><%= f[:help] %></p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% when "rich_text" %>
+            <div class="form-group">
+              <label for="pod_fields_<%= f[:name] %>" class="form-label"><%= f[:label] %></label>
+              <textarea id="pod_fields_<%= f[:name] %>" name="pod[fields][<%= f[:name] %>]"
+                        class="tinymce form-textarea h-40" data-controller="admin--tinymce"><%= (current_val || "")&.html_safe %></textarea>
+              <% if f[:help] %>
+                <p class="form-help"><%= f[:help] %></p>
+              <% end %>
+            </div>
+          <% when "image" %>
+            <%
+              # Extract image data from current value
+              image_data = if current_val.is_a?(Hash)
+                             current_val
+                           else
+                             current_val.present? ? { "attachment_key" => current_val } : {}
+                           end
+              attachment_key = image_data["attachment_key"]
+              alt_text = image_data["alt_text"] || ""
+              dimension_desktop = image_data["dimension_desktop"] || ""
+              dimension_mobile = image_data["dimension_mobile"] || ""
+            %>
+            <div class="form-group">
+              <label for="pod_fields_<%= f[:name] %>" class="form-label">
+                <%= f[:label] %>
+                <% if f[:required] %>
+                  <span class="text-destructive">*</span>
+                <% end %>
+              </label>
+
+              <div data-controller="admin--image-cropper"
+                   data-admin--image-cropper-crop-ratios-value="<%= f[:crop_ratios].to_json %>"
+                   data-admin--image-cropper-field-name-value="<%= f[:name] %>"
+                   data-admin--image-cropper-max-size-value="<%= f[:max_size] || 10485760 %>"
+                   data-admin--image-cropper-accept-types-value='["image/jpeg", "image/jpg", "image/png", "image/webp"]'
+                   class="space-y-4">
+
+                <!-- Hidden File Input -->
+                <input type="file"
+                       id="pod_fields_<%= f[:name] %>"
+                       name="pod_temp_files[<%= f[:name] %>]"
+                       accept="<%= f[:accept] %>"
+                       data-admin--image-cropper-target="input"
+                       class="sr-only"
+                       style="display: none;" />
+
+                <!-- Drag & Drop Upload Area -->
+                <div data-admin--image-cropper-target="uploadArea"
+                     data-action="click->admin--image-cropper#triggerFileInput dragover->admin--image-cropper#handleDragOver dragleave->admin--image-cropper#handleDragLeave drop->admin--image-cropper#handleDrop"
+                     class="<%= attachment_key.present? ? 'hidden' : '' %> relative border-2 border-dashed border-border hover:border-primary/50 bg-muted/30 hover:bg-muted/50 rounded-lg p-8 text-center cursor-pointer transition-colors group">
+
+                  <!-- Upload Icon -->
+                  <div class="mx-auto w-12 h-12 text-muted-foreground group-hover:text-primary mb-4 transition-colors">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+
+                  <!-- Upload Text -->
+                  <div class="space-y-2">
+                    <p class="text-sm font-medium text-card-foreground group-hover:text-primary transition-colors">
+                      Drag & drop an image here, or click to browse
+                    </p>
+                    <p class="text-xs text-muted-foreground">
+                      Supports JPEG, PNG, WebP up to <%= ((f[:max_size] || 10485760) / 1.megabyte).round %>MB
+                    </p>
+                  </div>
+
+                  <!-- Drag Over Overlay -->
+                  <div data-admin--image-cropper-target="dragOverlay"
+                       class="hidden absolute inset-0 bg-primary/10 border-2 border-primary rounded-lg flex items-center justify-center">
+                    <div class="text-primary font-medium">Drop image here</div>
+                  </div>
+                </div>
+
+                <!-- Current Image Preview -->
+                <div data-admin--image-cropper-target="imagePreview"
+                     class="<%= attachment_key.present? ? '' : 'hidden' %> relative group">
+
+                  <div class="relative overflow-hidden rounded-lg border border-border shadow-sm bg-background">
+                    <img data-admin--image-cropper-target="preview"
+                         alt="<%= alt_text %>"
+                         class="w-auto m-auto max-w-md h-auto object-cover"
+                         loading="lazy" />
+
+                    <!-- Image Overlay Actions -->
+                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button type="button"
+                              data-action="click->admin--image-cropper#replaceImage"
+                              class="btn-primary-sm">
+                        <%= action_icon("replace", class: "w-4 h-4 text-white") %>
+                        Replace
+                      </button>
+                      <button type="button"
+                              data-action="click->admin--image-cropper#removeImage"
+                              class="btn-danger-sm">
+                        <%= action_icon("delete", class: "w-4 h-4 text-white") %>
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Image Info -->
+                  <div class="mt-2 text-xs text-muted-foreground">
+                    <span data-admin--image-cropper-target="imageInfo">Loading...</span>
+                  </div>
+                </div>
+
+                <!-- Alt Text Input -->
+                <div class="form-group">
+                  <label for="pod_alt_<%= f[:name] %>" class="form-label">Alt Text <small>(<%= f[:name].humanize %>)</small></label>
+                  <input type="text"
+                         id="pod_alt_<%= f[:name] %>"
+                         name="pod[alt_texts][<%= f[:name] %>]"
+                         data-admin--image-cropper-target="altInput"
+                         class="form-input"
+                         placeholder="Describe this image for accessibility"
+                         value="<%= alt_text %>" />
+                  <p class="form-help">Brief description for screen readers and SEO</p>
+                </div>
+
+                <div class="grid form-grid gap-4 grid-cols-2">
+                  <!-- desktop dimensions Input -->
+                  <div class="form-group">
+                    <label for="pod_dimension_desktop_<%= f[:name] %>" class="form-label">Desktop Width and Height <small>(<%= f[:name].humanize %>)</small></label>
+                    <input type="text"
+                           id="pod_dimension_desktop_<%= f[:name] %>"
+                           name="pod[dimension_desktops][<%= f[:name] %>]"
+                           class="form-input"
+                           placeholder="Desktop dimensions (e.g. 1200,630)"
+                           value="<%= dimension_desktop %>" />
+                    <p class="form-help">Preferred desktop width and height in pixels</p>
+                  </div>
+
+                  <!-- mobile dimensions Input -->
+                  <div class="form-group">
+                    <label for="pod_dimension_mobile_<%= f[:name] %>" class="form-label">Mobile Width and Height <small>(<%= f[:name].humanize %>)</small></label>
+                    <input type="text"
+                           id="pod_dimension_mobile_<%= f[:name] %>"
+                           name="pod[dimension_mobiles][<%= f[:name] %>]"
+                           class="form-input"
+                           placeholder="Mobile dimensions (e.g. 630,1200)"
+                           value="<%= dimension_mobile %>" />
+                    <p class="form-help">Preferred mobile width and height in pixels</p>
+                  </div>
+                </div>
+
+                <!-- Hidden field for image data (structured JSON) -->
+                <input type="hidden"
+                       name="pod[fields][<%= f[:name] %>]"
+                       value="<%= image_data.present? ? image_data.to_json : '' %>"
+                       data-admin--image-cropper-target="attachmentKey"
+                       data-attachment-key="<%= f[:name] %>" />
+
+                <% if f[:help] %>
+                  <p class="form-help"><%= f[:help] %></p>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" viewBox="0 0 216 216" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="adminMTitle adminMDesc">
+  <title id="adminMTitle">Mosaic M Logo</title>
+  <desc id="adminMDesc">A colorful mosaic background with white letter M blocks.</desc>
+
+  <defs>
+    <style><![CDATA[
+      /* Tile colors */
+      .t0 { fill: #7C3AED; }  /* violet */
+      .t1 { fill: #5B8DEF; }  /* blue */
+      .t2 { fill: #06B6D4; }  /* cyan */
+      .t3 { fill: #22C55E; }  /* green */
+      .t4 { fill: #EAB308; }  /* amber */
+      .t5 { fill: #F43F5E; }  /* rose */
+      /* New layer colors - deeper/richer tones */
+      .t6 { fill: #4C1D95; }  /* deep violet */
+      .t7 { fill: #1E40AF; }  /* deep blue */
+      .t8 { fill: #0891B2; }  /* deep cyan */
+      .t9 { fill: #16A34A; }  /* deep green */
+      .ta { fill: #D97706; }  /* deep amber */
+      .tb { fill: #E11D48; }  /* deep rose */
+      /* White for M blocks */
+      .white { fill: #FFFFFF; }
+    ]]></style>
+
+    <!-- Base tile shape -->
+    <rect id="tile" width="16" height="16" rx="2" />
+  </defs>
+
+  <!-- 11x11 Mosaic background with white M blocks -->
+  <g>
+    <!-- Extended columns: x = 0,20,40,60,80,100,120,140,160,180,200 -->
+    <!-- Extended rows:    y = 0,20,40,60,80,100,120,140,160,180,200 -->
+
+    <!-- Row 0 (new top layer) -->
+    <use href="#tile" class="t6" x="0"   y="0"/>
+    <use href="#tile" class="t7" x="20"  y="0"/>
+    <use href="#tile" class="t8" x="40"  y="0"/>
+    <use href="#tile" class="t9" x="60"  y="0"/>
+    <use href="#tile" class="ta" x="80"  y="0"/>
+    <use href="#tile" class="tb" x="100" y="0"/>
+    <use href="#tile" class="t6" x="120" y="0"/>
+    <use href="#tile" class="t7" x="140" y="0"/>
+    <use href="#tile" class="t8" x="160" y="0"/>
+    <use href="#tile" class="t9" x="180" y="0"/>
+    <use href="#tile" class="ta" x="200" y="0"/>
+
+    <!-- Row 1 -->
+    <use href="#tile" class="t7" x="0"   y="20"/>
+    <use href="#tile" class="t0" x="20"  y="20"/>
+    <use href="#tile" class="t1" x="40"  y="20"/>
+    <use href="#tile" class="t2" x="60"  y="20"/>
+    <use href="#tile" class="t3" x="80"  y="20"/>
+    <use href="#tile" class="t4" x="100" y="20"/>
+    <use href="#tile" class="t5" x="120" y="20"/>
+    <use href="#tile" class="t0" x="140" y="20"/>
+    <use href="#tile" class="t1" x="160" y="20"/>
+    <use href="#tile" class="t2" x="180" y="20"/>
+    <use href="#tile" class="t3" x="200" y="20"/>
+
+    <!-- Row 2 - WHITE M BLOCKS START HERE -->
+    <use href="#tile" class="t8" x="0"   y="40"/>
+    <use href="#tile" class="t1" x="20"  y="40"/>
+    <use href="#tile" class="white" x="40"  y="40"/>  <!-- Left column M -->
+    <use href="#tile" class="t3" x="60"  y="40"/>
+    <use href="#tile" class="t4" x="80"  y="40"/>
+    <use href="#tile" class="t5" x="100" y="40"/>
+    <use href="#tile" class="t0" x="120" y="40"/>
+    <use href="#tile" class="t1" x="140" y="40"/>
+    <use href="#tile" class="white" x="160" y="40"/>  <!-- Right column M -->
+    <use href="#tile" class="t3" x="180" y="40"/>
+    <use href="#tile" class="t4" x="200" y="40"/>
+
+    <!-- Row 3 -->
+    <use href="#tile" class="t9" x="0"   y="60"/>
+    <use href="#tile" class="t2" x="20"  y="60"/>
+    <use href="#tile" class="white" x="40"  y="60"/>  <!-- Left column M -->
+    <use href="#tile" class="white" x="60"  y="60"/>  <!-- Left diagonal M -->
+    <use href="#tile" class="t5" x="80"  y="60"/>
+    <use href="#tile" class="t0" x="100" y="60"/>
+    <use href="#tile" class="t1" x="120" y="60"/>
+    <use href="#tile" class="white" x="140" y="60"/>  <!-- Right diagonal M -->
+    <use href="#tile" class="white" x="160" y="60"/>  <!-- Right column M -->
+    <use href="#tile" class="t4" x="180" y="60"/>
+    <use href="#tile" class="t5" x="200" y="60"/>
+
+    <!-- Row 4 -->
+    <use href="#tile" class="ta" x="0"   y="80"/>
+    <use href="#tile" class="t3" x="20"  y="80"/>
+    <use href="#tile" class="white" x="40"  y="80"/>  <!-- Left column M -->
+    <use href="#tile" class="t5" x="60"  y="80"/>
+    <use href="#tile" class="white" x="80"  y="80"/>  <!-- Left diagonal M -->
+    <use href="#tile" class="t1" x="100" y="80"/>
+    <use href="#tile" class="white" x="120" y="80"/>  <!-- Right diagonal M -->
+    <use href="#tile" class="t3" x="140" y="80"/>
+    <use href="#tile" class="white" x="160" y="80"/>  <!-- Right column M -->
+    <use href="#tile" class="t5" x="180" y="80"/>
+    <use href="#tile" class="t0" x="200" y="80"/>
+
+    <!-- Row 5 -->
+    <use href="#tile" class="tb" x="0"   y="100"/>
+    <use href="#tile" class="t4" x="20"  y="100"/>
+    <use href="#tile" class="white" x="40"  y="100"/>  <!-- Left column M -->
+    <use href="#tile" class="t0" x="60"  y="100"/>
+    <use href="#tile" class="t1" x="80"  y="100"/>
+    <use href="#tile" class="white" x="100" y="100"/>  <!-- Center M -->
+    <use href="#tile" class="t3" x="120" y="100"/>
+    <use href="#tile" class="t4" x="140" y="100"/>
+    <use href="#tile" class="white" x="160" y="100"/>  <!-- Right column M -->
+    <use href="#tile" class="t0" x="180" y="100"/>
+    <use href="#tile" class="t1" x="200" y="100"/>
+
+    <!-- Row 6 -->
+    <use href="#tile" class="t6" x="0"   y="120"/>
+    <use href="#tile" class="t5" x="20"  y="120"/>
+    <use href="#tile" class="white" x="40"  y="120"/>  <!-- Left column M -->
+    <use href="#tile" class="t1" x="60"  y="120"/>
+    <use href="#tile" class="t2" x="80"  y="120"/>
+    <use href="#tile" class="t3" x="100" y="120"/>
+    <use href="#tile" class="t4" x="120" y="120"/>
+    <use href="#tile" class="t5" x="140" y="120"/>
+    <use href="#tile" class="white" x="160" y="120"/>  <!-- Right column M -->
+    <use href="#tile" class="t1" x="180" y="120"/>
+    <use href="#tile" class="t2" x="200" y="120"/>
+
+    <!-- Row 7 -->
+    <use href="#tile" class="t7" x="0"   y="140"/>
+    <use href="#tile" class="t0" x="20"  y="140"/>
+    <use href="#tile" class="white" x="40"  y="140"/>  <!-- Left column M -->
+    <use href="#tile" class="t2" x="60"  y="140"/>
+    <use href="#tile" class="t3" x="80"  y="140"/>
+    <use href="#tile" class="t4" x="100" y="140"/>
+    <use href="#tile" class="t5" x="120" y="140"/>
+    <use href="#tile" class="t0" x="140" y="140"/>
+    <use href="#tile" class="white" x="160" y="140"/>  <!-- Right column M -->
+    <use href="#tile" class="t2" x="180" y="140"/>
+    <use href="#tile" class="t3" x="200" y="140"/>
+
+    <!-- Row 8 -->
+    <use href="#tile" class="t8" x="0"   y="160"/>
+    <use href="#tile" class="t1" x="20"  y="160"/>
+    <use href="#tile" class="white" x="40"  y="160"/>  <!-- Left column M -->
+    <use href="#tile" class="t3" x="60"  y="160"/>
+    <use href="#tile" class="t4" x="80"  y="160"/>
+    <use href="#tile" class="t5" x="100" y="160"/>
+    <use href="#tile" class="t0" x="120" y="160"/>
+    <use href="#tile" class="t1" x="140" y="160"/>
+    <use href="#tile" class="white" x="160" y="160"/>  <!-- Right column M -->
+    <use href="#tile" class="t3" x="180" y="160"/>
+    <use href="#tile" class="t4" x="200" y="160"/>
+
+    <!-- Row 9 -->
+    <use href="#tile" class="t9" x="0"   y="180"/>
+    <use href="#tile" class="t2" x="20"  y="180"/>
+    <use href="#tile" class="t3" x="40"  y="180"/>
+    <use href="#tile" class="t4" x="60"  y="180"/>
+    <use href="#tile" class="t5" x="80"  y="180"/>
+    <use href="#tile" class="t0" x="100" y="180"/>
+    <use href="#tile" class="t1" x="120" y="180"/>
+    <use href="#tile" class="t2" x="140" y="180"/>
+    <use href="#tile" class="t3" x="160" y="180"/>
+    <use href="#tile" class="t4" x="180" y="180"/>
+    <use href="#tile" class="t5" x="200" y="180"/>
+
+    <!-- Row 10 (new bottom layer) -->
+    <use href="#tile" class="ta" x="0"   y="200"/>
+    <use href="#tile" class="t3" x="20"  y="200"/>
+    <use href="#tile" class="t4" x="40"  y="200"/>
+    <use href="#tile" class="t5" x="60"  y="200"/>
+    <use href="#tile" class="t0" x="80"  y="200"/>
+    <use href="#tile" class="t1" x="100" y="200"/>
+    <use href="#tile" class="t2" x="120" y="200"/>
+    <use href="#tile" class="t3" x="140" y="200"/>
+    <use href="#tile" class="t4" x="160" y="200"/>
+    <use href="#tile" class="t5" x="180" y="200"/>
+    <use href="#tile" class="t0" x="200" y="200"/>
+  </g>
+</svg>

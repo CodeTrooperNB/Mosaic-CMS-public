@@ -1,0 +1,17 @@
+<% if @blogs.any? %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+        <% @blogs.each do |blog| %>
+            <%= render 'blogs/shared/blog_card', blog: blog %>
+        <% end %>
+    </div>
+<% else %>
+    <div class="w-full flex justify-center">
+        <div class="w-[50%] flex justify-center flex-col items-center">
+            <div class="bg-grey-custom rounded-full aspect-square w-[25%] flex justify-center items-center">
+                <%= inline_svg_tag("public/peak_logo_white.svg", alt: "Placeholder Logo" , class: "w-[65%]") %>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-5">No posts yet</h3>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Check back soon for new updates.</p>
+        </div>
+    </div>
+<% end %>

@@ -1,0 +1,33 @@
+<% content_for :page_title, "Edit Admin User" %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= action_icon("edit", class: "w-5 h-5 text-muted-foreground") %>
+        <h1 class="text-lg font-semibold text-card-foreground">Edit Admin User</h1>
+      </div>
+      <p class="text-sm text-muted-foreground mt-1">Update settings for <%= @admin_user.email %></p>
+    </div>
+
+    <div class="p-6">
+      <%= form_with model: [:admin, @admin_user], url: admin_admin_user_path(@admin_user), method: :patch, local: true, class: "space-y-6" do |f| %>
+        <%= render partial: "form", locals: { f: f, admin_user: @admin_user, submit_label: "Update User" } %>
+      <% end %>
+
+      <% unless @admin_user == current_admin_user %>
+        <div class="mt-6 pt-6 border-t border-border">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-muted-foreground">Danger zone</div>
+            <%= button_to admin_admin_user_path(@admin_user), method: :delete,
+                          form: { data: { turbo_confirm: "Delete admin user '#{@admin_user.email}'? This cannot be undone." } },
+                          class: "btn-danger-sm" do %>
+              <%= action_icon("delete", class: "w-4 h-4 text-white") %>
+              Delete User
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
