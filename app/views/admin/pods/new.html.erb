@@ -1,0 +1,113 @@
+<% content_for :page_title, "New Pod" %>
+
+<% if @pod_type.blank? %>
+  <!-- Pod Type Selection -->
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= action_icon("create", class: "w-5 h-5 text-muted-foreground") %>
+        <h1 class="text-lg font-semibold text-card-foreground">Select Pod Type</h1>
+      </div>
+      <p class="text-sm text-muted-foreground mt-1">Choose from available schemas to create a new pod</p>
+    </div>
+    <div class="p-6 space-y-6">
+      <% categories = Admin::PodSchemas.categories %>
+      <% types = Admin::PodSchemas.available_types %>
+      <% grouped = types.group_by { |t| (Admin::PodSchemas.schema_for(t)["category"] rescue "uncategorized") } %>
+      <% grouped.each do |category, type_list| %>
+        <div>
+          <div class="mb-3 font-medium text-card-foreground"><%= categories[category] || category.to_s.humanize %></div>
+          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <% type_list.each do |t| %>
+              <% schema = Admin::PodSchemas.schema_for(t) %>
+              <div class="border border-border rounded-lg p-4 hover:shadow-sm transition-shadow bg-card">
+                <div class="flex items-center gap-2 mb-2">
+                  <%= admin_icon("pods", class: "w-4 h-4 text-muted-foreground") %>
+                  <div class="font-semibold text-card-foreground"><%= schema["name"] || t.humanize %></div>
+                </div>
+                <div class="text-xs text-muted-foreground mb-3">Type: <%= t %></div>
+                <%= link_to new_admin_pod_path(pod_type: t), class: "btn-secondary-sm" do %>
+                  <%= action_icon("create", class: "w-4 h-4") %>
+                  Use this type
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <!-- Pod Creation Form -->
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-card border border-border rounded-lg shadow-sm">
+      <div class="border-b border-border px-6 py-4">
+        <div class="flex items-center gap-2">
+          <%= action_icon("create", class: "w-5 h-5 text-muted-foreground") %>
+          <h1 class="text-lg font-semibold text-card-foreground"><%= (@schema && @schema["name"]) || @pod_type.humanize %></h1>
+        </div>
+        <p class="text-sm text-muted-foreground mt-1">Create a new <%= @pod_type.humanize.downcase %> pod</p>
+      </div>
+
+      <div class="p-6">
+        <% if @pod.errors.any? %>
+          <div class="mb-6 border border-destructive/20 bg-destructive/10 rounded-md p-4">
+            <div class="flex gap-3">
+              <%= status_icon("error", class: "w-5 h-5 text-destructive shrink-0 mt-0.5") %>
+              <div>
+                <h3 class="font-medium text-destructive text-sm">Please fix the following errors:</h3>
+                <ul class="mt-2 text-sm text-destructive space-y-1">
+                  <% @pod.errors.full_messages.each do |msg| %>
+                    <li class="flex items-start gap-1">
+                      <span class="text-destructive mt-1">•</span>
+                      <%= msg %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div data-controller="admin--pod-preview"
+             data-admin--pod-preview-preview-url-value="<%= preview_admin_pods_url %>">
+        <%= form_with url: admin_pods_path, method: :post, local: true, class: "space-y-6" do %>
+          <%= hidden_field_tag "pod[pod_type]", @pod_type %>
+
+          <div class="form-group">
+            <label for="pod_name" class="form-label">Pod Name</label>
+            <input type="text" id="pod_name" name="pod[name]" value="<%= @pod.name %>" required
+                   class="form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @pod.errors[:name].present?}"
+                   placeholder="e.g., Homepage Hero Section" />
+            <% if @pod.errors[:name].present? %>
+              <p class="form-error"><%= @pod.errors[:name].first %></p>
+            <% end %>
+            <p class="form-help">Give this pod a descriptive name for easy identification</p>
+          </div>
+
+          <%= render "admin/pods/fields", schema: @schema, pod: @pod %>
+
+          <div class="form-group">
+            <label for="pod_definition" class="form-label">Advanced: Raw JSON (optional)</label>
+            <textarea id="pod_definition" name="pod[definition]"
+                      class="form-textarea h-32 font-mono text-sm">{}</textarea>
+            <p class="form-help">Raw JSON definition - overrides dynamic fields when provided</p>
+          </div>
+
+          <div class="flex items-center gap-3 pt-6 border-t border-border">
+            <button type="button" form="" class="btn-secondary-sm" data-action="click->admin--pod-preview#open">Preview</button>
+            <button type="submit" class="btn-primary">
+              <%= action_icon("create", class: "w-4 h-4") %>
+              Create Pod
+            </button>
+            <%= link_to "Cancel", admin_pods_path, class: "btn-secondary" %>
+          </div>
+        <% end %>
+        <!-- Preview Modal -->
+        <%= render "admin/pods/preview_modal" %>
+        <!-- /Preview Modal -->
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,108 @@
+<div class="page-container">
+  <div class="pb-5 lg:pb-10 flex items-center flex-col" data-controller="filter-toggle">
+    <h2 class="pod-page-title !mb-0">
+      Blog
+    </h2>
+    <div class="red-accent-pill-large"></div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 mt-6 gap-10">
+    <div class="lg:col-span-2">
+      <p class="text-2xl lg:text-4xl font-medium text-center">
+        <%= @blog.display_title %>
+      </p>
+      <div class="w-full py-[20px] blog-content-styling">
+        <%= image_tag serve_image_remote_url(@blog.cover_image), class:"w-full" if @blog.cover_image.present? %>
+        <%= @blog.content %>
+      </div>
+
+      <div class="mt-6 bg-grey-custom rounded-xl p-5">
+        <%= form_with model: [@blog, @comment], url: blog_comments_path(@blog), local: true do |f| %>
+          <div class="relative col-span-2 md:col-span-2">
+            <%= f.text_area :body, rows: 15, required: true,
+                            id: "comment_body",
+                            class: "md-input-styling peer h-32 resize-none w-full",
+                            placeholder: " " %>
+
+            <%= f.label :body, "Comment",
+                        for: "comment_body",
+                        class: "floating-label-textarea transform-gpu" %>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-7">
+            <div class="relative h-[45px] mt-5">
+              <%= f.text_field :author_name,
+                               id: "comment_first_name",
+                               required: true,
+                               class: "md-input-styling peer border border-dark-custom h-[45px] !rounded-lg",
+                               placeholder: " " %>
+
+              <%= f.label :author_name, "First Name",
+                          for: "comment_first_name",
+                          class: "floating-label" %>
+            </div>
+
+            <div class="relative h-[45px] lg:mt-5">
+              <%= f.text_field :author_last_name,
+                               id: "comment_last_name",
+                               placeholder: " ",
+                               required: true,
+                               class: "md-input-styling peer border border-dark-custom h-[45px] !rounded-lg" %>
+
+              <%= f.label :author_last_name, "Last Name",
+                          for: "comment_last_name",
+                          class: "floating-label" %>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <%= f.submit "Send Comment", class: "btn-checkout-solid lg:!w-[20%]" %>
+          </div>
+        <% end %>
+
+      </div>
+
+      <% if @comments.any? %>
+        <% @comments.each do |comment| %>
+          <div class="px-5 pt-5">
+            <%#= image_tag 'peak.png', class:"size-[60px] object-cover rounded-full border-1 border-dark-custom" %>
+            <p class="text-xs italic pt-4">
+              <%= comment.display_name %>, <%= time_ago_in_words(comment.created_at) %> ago
+            </p>
+            <p class="pt-4 text-sm">
+              <%= simple_format(comment.body) %>
+            </p>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-gray-600 dark:text-gray-300">Be the first to comment on this post.</p>
+      <% end %>
+    </div>
+
+    <div class="col-span-1">
+      <div class="flex flex-col">
+        <p class="text-2xl lg:text-4xl font-medium text-center">
+          Latest Blog Posts
+        </p>
+        <% if @recent_blogs.present? %>
+          <% @recent_blogs.each do | recent_blog |  %>
+            <div class="mt-5">
+              <%= render 'blogs/shared/blog_card', blog: recent_blog %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="rounded-xl py-3 px-4 bg-grey-custom mt-5">
+        <p class="text-lg lg:text-xl font-medium text-start">
+          Tags
+        </p>
+        <div class="mt-3 flex flex-row flex-wrap">
+          <% if @blog.blog_tags.any? %>
+            <% @blog.blog_tags.each do |tag| %>
+              <%= link_to tag.name, blogs_path(tags: tag.slug), class: "tag-selector-styling" %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

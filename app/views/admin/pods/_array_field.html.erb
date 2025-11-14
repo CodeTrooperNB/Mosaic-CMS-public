@@ -1,0 +1,78 @@
+<%
+  field_name = local_assigns[:field_name]
+  field_config = local_assigns[:field_config]
+  current_items = local_assigns[:current_items] || []
+  item_schema = field_config[:item_schema] || {}
+  min_items = field_config[:min_items] || 0
+  max_items = field_config[:max_items] || 10
+%>
+
+<div class="form-group" data-controller="admin--array-manager"
+     data-admin--array-manager-field-name-value="<%= field_name %>"
+     data-admin--array-manager-min-items-value="<%= min_items %>"
+     data-admin--array-manager-max-items-value="<%= max_items %>"
+     data-admin--array-manager-item-schema-value="<%= item_schema.to_json %>">
+  <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center gap-3">
+      <label class="form-label">
+        <%= field_config[:label] %>
+        <% if field_config[:required] %>
+          <span class="text-destructive">*</span>
+        <% end %>
+      </label>
+
+      <!-- Collapse/Expand All Controls -->
+      <div class="flex items-center gap-1">
+        <button type="button"
+                data-action="click->admin--array-manager#collapseAll"
+                class="px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-card-foreground rounded-3xl border border-border transition-colors"
+                title="Collapse All">
+          Collapse All
+        </button>
+        <button type="button"
+                data-action="click->admin--array-manager#expandAll"
+                class="px-2 py-1 text-xs bg-muted hover:bg-muted/80 text-muted-foreground hover:text-card-foreground rounded-3xl border border-border transition-colors"
+                title="Expand All">
+          Expand All
+        </button>
+      </div>
+    </div>
+
+    <div class="text-xs text-muted-foreground">
+      <span data-admin--array-manager-target="itemCount"><%= current_items.length %></span>
+      / <%= max_items %> items
+    </div>
+  </div>
+
+  <div class="space-y-4">
+
+    <!-- Array Items Container -->
+    <div data-admin--array-manager-target="itemsContainer sortableContainer"
+         id="sortable-<%= field_name.gsub(/[^\w]/, '-') %>"
+         class="sortable-container">
+      <% current_items.each_with_index do |item, index| %>
+        <%= render "admin/pods/array_item",
+                   field_name: field_name,
+                   item_schema: item_schema,
+                   item_data: item,
+                   item_index: index %>
+      <% end %>
+    </div>
+
+    <!-- Add Item Button -->
+    <div class="flex items-center justify-center">
+      <button type="button"
+              data-action="click->admin--array-manager#addItem"
+              data-admin--array-manager-target="addButton"
+              class="btn-secondary-sm flex items-center gap-2 <%= 'opacity-50 cursor-not-allowed' if current_items.length >= max_items %>"
+              <%= 'disabled' if current_items.length >= max_items %>>
+        <%= action_icon("create", class: "w-4 h-4") %>
+        Add <%= field_config[:label].singularize %>
+      </button>
+    </div>
+
+    <% if field_config[:help] %>
+      <p class="form-help"><%= field_config[:help] %></p>
+    <% end %>
+  </div>
+</div>

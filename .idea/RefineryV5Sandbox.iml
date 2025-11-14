@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="4">
+  <component name="ModuleRunConfigurationManager">
+    <shared />
+  </component>
+  <component name="RModuleSettingsStorage">
+    <LOAD_PATH number="0" />
+    <I18N_FOLDERS number="1" string0="$MODULE_DIR$/../RefineryV5Sandbox/config/locales" />
+  </component>
+  <component name="RailsPaths" isManagedAutomatically="true">
+    <entry key="app">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app</value>
+    </entry>
+    <entry key="app/assets">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/assets</value>
+    </entry>
+    <entry key="app/channels">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/channels</value>
+    </entry>
+    <entry key="app/controllers">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/controllers</value>
+    </entry>
+    <entry key="app/helpers">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/helpers</value>
+    </entry>
+    <entry key="app/mailers">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/mailers</value>
+    </entry>
+    <entry key="app/models">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/models</value>
+    </entry>
+    <entry key="app/views">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/app/views</value>
+    </entry>
+    <entry key="config">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config</value>
+    </entry>
+    <entry key="config/cable">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/cable.yml</value>
+    </entry>
+    <entry key="config/database">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/database.yml</value>
+    </entry>
+    <entry key="config/environment">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/environment.rb</value>
+    </entry>
+    <entry key="config/environments">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/environments</value>
+    </entry>
+    <entry key="config/initializers">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/initializers</value>
+    </entry>
+    <entry key="config/locales">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/locales</value>
+    </entry>
+    <entry key="config/routes">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/routes</value>
+    </entry>
+    <entry key="config/routes.rb">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config/routes.rb</value>
+    </entry>
+    <entry key="config/secrets">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/config</value>
+    </entry>
+    <entry key="db">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/db</value>
+    </entry>
+    <entry key="db/migrate">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/db/migrate</value>
+    </entry>
+    <entry key="db/seeds.rb">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/db/seeds.rb</value>
+    </entry>
+    <entry key="lib">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/lib</value>
+    </entry>
+    <entry key="lib/assets">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/lib/assets</value>
+    </entry>
+    <entry key="lib/tasks">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/lib/tasks</value>
+    </entry>
+    <entry key="lib/templates">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/lib/templates</value>
+    </entry>
+    <entry key="log">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/log/development.log</value>
+    </entry>
+    <entry key="public">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/public</value>
+    </entry>
+    <entry key="public/javascripts">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/public/javascripts</value>
+    </entry>
+    <entry key="public/stylesheets">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/public/stylesheets</value>
+    </entry>
+    <entry key="tmp">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/tmp</value>
+    </entry>
+    <entry key="vendor">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/vendor</value>
+    </entry>
+    <entry key="vendor/assets">
+      <value>file://$MODULE_DIR$/../RefineryV5Sandbox/vendor/assets</value>
+    </entry>
+  </component>
+</module>

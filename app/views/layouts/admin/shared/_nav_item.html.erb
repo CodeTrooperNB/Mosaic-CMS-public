@@ -1,0 +1,11 @@
+<%= link_to path,
+            class: "group flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ease-in-out #{current ? 'bg-primary text-primary-foreground shadow-sm' : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground'}",
+            data: { turbo_frame: "_top" } do %>
+  <div class="flex items-center justify-center h-5 w-5 flex-shrink-0">
+    <%= admin_icon(icon, class: "h-5 w-5 #{current ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-sidebar-accent-foreground'} transition-colors duration-200") %>
+  </div>
+  <span class="truncate"><%= name %></span>
+  <% if current %>
+    <div class="ml-auto h-1.5 w-1.5 rounded-full bg-primary-foreground flex-shrink-0"></div>
+  <% end %>
+<% end %>

@@ -1,0 +1,109 @@
+#pod-fields {
+  /* Sortable styling for pod items */
+
+  .sortable-container {
+    min-height: 50px;
+  }
+
+  .sortable-item {
+    transition: all 0.2s ease;
+  }
+
+  .sortable-item.sortable-ghost {
+    opacity: 0.4;
+  }
+
+  .sortable-item.sortable-chosen {
+    transform: rotate(2deg);
+  }
+
+  .sortable-handle {
+    cursor: grab;
+  }
+
+  .sortable-handle:active {
+    cursor: grabbing;
+  }
+}
+
+#page-index {
+  /* Sortable styling for pages */
+  .sortable-item {
+    transition: all 0.2s ease;
+
+    // Ensure clean state by default
+    &:not(.sortable-chosen):not(.sortable-ghost):not(.sortable-drag) {
+      transform: none !important;
+      opacity: 1 !important;
+      box-shadow: none !important;
+    }
+  }
+
+  // Clean state for all elements - more aggressive
+  li[data-page-id] {
+    &:not(.sortable-chosen):not(.sortable-ghost):not(.sortable-drag) {
+      transform: none !important;
+      opacity: 1 !important;
+      box-shadow: none !important;
+      border: 1px solid hsl(var(--border)) !important;
+      background: hsl(var(--card)) !important;
+      transition: all 0.2s ease !important;
+    }
+  }
+
+  .sortable-ghost {
+    opacity: 0.4 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+    border: 2px dashed rgba(59, 130, 246, 0.3) !important;
+    border-radius: 0.375rem;
+    transform: none !important;
+  }
+
+  .sortable-chosen {
+    transform: rotate(1deg) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1000 !important;
+  }
+
+  .sortable-drag {
+    opacity: 0.8 !important;
+    transform: rotate(1deg) !important;
+  }
+
+  .drag-handle {
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  /* Ensure nested lists can receive drops */
+  ul[data-controller*="page-sorter"] {
+    min-height: 10px;
+    position: relative;
+  }
+
+  /* Show drop zones when dragging */
+  .sortable-chosen ~ ul[data-controller*="page-sorter"],
+  ul[data-controller*="page-sorter"]:empty {
+    background: rgba(59, 130, 246, 0.05);
+    border: 1px dashed rgba(59, 130, 246, 0.2);
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    display: block !important;
+  }
+
+  /* Drop zone indicator */
+  ul[data-controller*="page-sorter"]:empty::before {
+    content: "Drop pages here to nest under parent";
+    display: block;
+    text-align: center;
+    color: rgba(59, 130, 246, 0.6);
+    font-size: 0.75rem;
+    font-style: italic;
+  }
+
+
+}

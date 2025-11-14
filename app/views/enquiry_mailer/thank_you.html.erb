@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You for Your Enquiry</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333333;
+      line-height: 1.6;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .email-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px 30px;
+      text-align: center;
+      color: #ffffff;
+    }
+    .email-header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .email-body {
+      padding: 40px 30px;
+    }
+    .email-body h2 {
+      margin-top: 0;
+      font-size: 20px;
+      color: #333333;
+    }
+    .email-body p {
+      margin: 16px 0;
+      color: #666666;
+    }
+    .info-box {
+      background-color: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 20px;
+      margin: 24px 0;
+      border-radius: 4px;
+    }
+    .info-box h3 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      color: #333333;
+    }
+    .info-box p {
+      margin: 8px 0;
+      color: #666666;
+      font-size: 14px;
+    }
+    .info-box strong {
+      color: #333333;
+      display: inline-block;
+      min-width: 80px;
+    }
+    .email-footer {
+      background-color: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      font-size: 14px;
+      color: #999999;
+    }
+    .email-footer p {
+      margin: 8px 0;
+    }
+    @media only screen and (max-width: 600px) {
+      .email-container {
+        margin: 0;
+        border-radius: 0;
+      }
+      .email-header {
+        padding: 30px 20px;
+      }
+      .email-header h1 {
+        font-size: 24px;
+      }
+      .email-body {
+        padding: 30px 20px;
+      }
+      .info-box {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="email-header">
+      <h1><%= @site_name %></h1>
+    </div>
+
+    <div class="email-body">
+      <h2>Thank you for your enquiry!</h2>
+
+      <p>Dear <%= @enquiry.name %>,</p>
+
+      <p>Thank you for contacting us. We have received your enquiry and will get back to you as soon as possible, typically within 1-2 business days.</p>
+
+      <div class="info-box">
+        <h3>Your Enquiry Details:</h3>
+        <p><strong>Name:</strong> <%= @enquiry.name %></p>
+        <p><strong>Email:</strong> <%= @enquiry.email %></p>
+        <% if @enquiry.phone.present? %>
+          <p><strong>Phone:</strong> <%= @enquiry.phone %></p>
+        <% end %>
+        <% if @enquiry.company.present? %>
+          <p><strong>Company:</strong> <%= @enquiry.company %></p>
+        <% end %>
+        <% if @enquiry.subject.present? %>
+          <p><strong>Subject:</strong> <%= @enquiry.subject %></p>
+        <% end %>
+        <% if @enquiry.message.present? %>
+          <p><strong>Message:</strong><br><%= simple_format(@enquiry.message) %></p>
+        <% end %>
+      </div>
+
+      <p>If you have any additional questions in the meantime, please don't hesitate to reach out.</p>
+
+      <p>Best regards,<br>The <%= @site_name %> Team</p>
+    </div>
+
+    <div class="email-footer">
+      <p>&copy; <%= Time.current.year %> <%= @site_name %>. All rights reserved.</p>
+      <p>This is an automated message. Please do not reply to this email.</p>
+    </div>
+  </div>
+</body>
+</html>

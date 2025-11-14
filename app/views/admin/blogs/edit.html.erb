@@ -1,0 +1,18 @@
+<% content_for :page_title, "Edit Blog" %>
+
+<div class="space-y-6">
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="flex items-center justify-between border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= admin_icon("posts", class: "w-5 h-5 text-muted-foreground") %>
+        <h2 class="text-lg font-semibold text-card-foreground">Edit Blog Post</h2>
+      </div>
+      <%= link_to admin_blog_path(@blog), class: "btn-secondary-sm" do %>
+        Back to Blog
+      <% end %>
+    </div>
+    <div class="p-6">
+      <%= render "form" %>
+    </div>
+  </div>
+</div>

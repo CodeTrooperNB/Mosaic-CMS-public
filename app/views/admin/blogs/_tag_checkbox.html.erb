@@ -1,0 +1,4 @@
+<div class="flex items-center gap-2">
+  <%= check_box_tag "blog[blog_tag_ids][]", tag.id, checked, id: dom_id(tag), class: "form-checkbox" %>
+  <%= label_tag dom_id(tag), tag.name, class: "text-sm text-card-foreground" %>
+</div>

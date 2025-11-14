@@ -1,0 +1,102 @@
+<% content_for :page_title, "Dashboard" %>
+
+<div class="space-y-8">
+  <div>
+    <h2 class="text-2xl font-semibold text-foreground">Welcome back</h2>
+    <p class="text-muted-foreground">Here's what's happening with your site today.</p>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="rounded-md border border-border bg-card p-4">
+      <div class="text-sm text-muted-foreground">Total Pages</div>
+      <div class="text-2xl font-bold text-card-foreground"><%= @stats[:total_pages] %></div>
+    </div>
+    <div class="rounded-md border border-border bg-card p-4">
+      <div class="text-sm text-muted-foreground">Published</div>
+      <div class="text-2xl font-bold text-card-foreground"><%= @stats[:published_pages] %></div>
+    </div>
+    <div class="rounded-md border border-border bg-card p-4">
+      <div class="text-sm text-muted-foreground">Draft Pages</div>
+      <div class="text-2xl font-bold text-card-foreground"><%= @stats[:draft_pages] %></div>
+    </div>
+    <div class="rounded-md border border-border bg-card p-4">
+      <div class="text-sm text-muted-foreground">Total Users</div>
+      <div class="text-2xl font-bold text-card-foreground"><%= @stats[:total_users] %></div>
+    </div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <!-- Recent Activity card -->
+    <div class="rounded-md border border-border bg-card max-h-[500px] overflow-auto">
+      <div class="border-b border-border p-4">
+        <h3 class="font-semibold text-card-foreground">Recent Activity</h3>
+      </div>
+      <div class="p-4">
+        <% if @recent_activity.present? %>
+          <ul class="space-y-3">
+            <% @recent_activity.each do |a| %>
+              <li class="flex items-center gap-3">
+                <%= admin_icon(a[:icon] || "document-text", class: "h-4 w-4 text-muted-foreground") %>
+                <div class="flex-1">
+                  <div class="font-medium text-card-foreground"><%= a[:title] %></div>
+                  <div class="text-sm text-muted-foreground"><%= a[:description] %></div>
+                </div>
+                <div class="text-xs text-muted-foreground">
+                  <% if a[:time].is_a?(Time) || a[:time].is_a?(ActiveSupport::TimeWithZone) %>
+                    <%= time_ago_in_words(a[:time]) %> ago
+                  <% else %>
+                    <%= a[:time] %>
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="text-muted-foreground">No recent activity</div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Current Sessions card -->
+    <div class="rounded-md border border-border bg-card max-h-[500px] overflow-auto">
+      <div class="border-b border-border p-4">
+        <h3 class="font-semibold text-card-foreground">Current Sessions</h3>
+      </div>
+      <div class="p-4">
+        <% if @current_sessions.present? %>
+          <ul class="space-y-3">
+            <% @current_sessions.each do |u| %>
+              <li class="flex items-center justify-between p-3 border rounded-md bg-gray-50 dark:bg-gray-700/50">
+                <div class="min-w-0 flex items-center gap-3">
+                  <%= admin_icon("user", class: "h-4 w-4 text-muted-foreground") %>
+                  <div class="min-w-0">
+                    <div class="font-medium text-card-foreground truncate"><%= (u.respond_to?(:name) && u.name.present?) ? u.name : u.email %></div>
+                    <div class="text-sm text-muted-foreground truncate">
+                      <%= u.email %>
+                      <% if u.respond_to?(:current_sign_in_ip) && u.current_sign_in_ip.present? %>
+                        • <span class="font-mono"><%= u.current_sign_in_ip %></span>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-xs text-muted-foreground whitespace-nowrap">
+                  <% if u.respond_to?(:current_sign_in_at) && u.current_sign_in_at.present? %>
+                    <%= time_ago_in_words(u.current_sign_in_at) %> ago
+                  <% else %>
+                    Active recently
+                  <% end %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="text-muted-foreground">No active admin sessions in the past 24 hours</div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

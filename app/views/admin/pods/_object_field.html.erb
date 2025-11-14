@@ -1,0 +1,299 @@
+<%
+  field_name = local_assigns[:field_name]
+  field_config = local_assigns[:field_config]
+  current_data = local_assigns[:current_data] || {}
+  object_schema = field_config[:schema] || {}
+%>
+
+<div class="form-group border border-border rounded-lg p-4 bg-muted/20">
+  <div class="mb-4">
+    <label class="form-label text-base font-semibold">
+      <%= field_config[:label] %>
+      <% if field_config[:required] %>
+        <span class="text-destructive">*</span>
+      <% end %>
+    </label>
+    <% if field_config[:help] %>
+      <p class="text-xs text-muted-foreground mt-1"><%= field_config[:help] %></p>
+    <% end %>
+  </div>
+
+  <div class="space-y-4 pl-4 border-l-2 border-border">
+    <% object_schema.each do |sub_field_name, sub_field_config| %>
+      <%
+        sub_field_type = sub_field_config["type"]&.downcase
+        current_sub_val = current_data[sub_field_name]
+        input_name = "pod[fields][#{field_name}][#{sub_field_name}]"
+        input_id = "pod_fields_#{field_name}_#{sub_field_name}"
+      %>
+
+      <% case sub_field_type
+         when "text", "url" %>
+        <div class="form-group">
+          <label for="<%= input_id %>" class="form-label text-sm">
+            <%= sub_field_config["label"] || sub_field_name.humanize %>
+            <% if sub_field_config["required"] %>
+              <span class="text-destructive">*</span>
+            <% end %>
+          </label>
+          <input type="<%= sub_field_type == 'url' ? 'url' : 'text' %>"
+                 id="<%= input_id %>"
+                 name="<%= input_name %>"
+                 class="form-input"
+                 placeholder="<%= sub_field_config["placeholder"] %>"
+                 value="<%= current_sub_val || "" %>" />
+          <% if sub_field_config["help"] %>
+            <p class="form-help text-xs"><%= sub_field_config["help"] %></p>
+          <% end %>
+        </div>
+
+      <% when "select" %>
+        <div class="form-group">
+          <label for="<%= input_id %>" class="form-label text-sm">
+            <%= sub_field_config["label"] || sub_field_name.humanize %>
+            <% if sub_field_config["required"] %>
+              <span class="text-destructive">*</span>
+            <% end %>
+          </label>
+          <select id="<%= input_id %>" name="<%= input_name %>" class="form-select">
+            <% default_val = sub_field_config["default"] %>
+            <% selected_val = current_sub_val || default_val %>
+            <% (sub_field_config["options"] || []).each do |opt| %>
+              <option value="<%= opt["value"] %>" <%= (opt["value"].to_s == selected_val.to_s) ? 'selected' : '' %>>
+                <%= opt["label"] || opt["value"].to_s %>
+              </option>
+            <% end %>
+          </select>
+          <% if sub_field_config["help"] %>
+            <p class="form-help text-xs"><%= sub_field_config["help"] %></p>
+          <% end %>
+        </div>
+
+      <% when "boolean" %>
+        <div class="form-group">
+          <div class="flex items-center gap-3 p-3 bg-muted/50 rounded-md">
+            <input type="hidden" name="<%= input_name %>" value="0" />
+            <input type="checkbox"
+                   id="<%= input_id %>"
+                   name="<%= input_name %>"
+                   value="1"
+                   class="form-checkbox"
+                   <%= (current_sub_val == true || current_sub_val == "1" || current_sub_val == "true") ? 'checked' : '' %> />
+            <div>
+              <label for="<%= input_id %>" class="form-label-inline !mb-0 text-sm font-medium">
+                <%= sub_field_config["label"] || sub_field_name.humanize %>
+              </label>
+              <% if sub_field_config["help"] %>
+                <p class="text-xs text-muted-foreground"><%= sub_field_config["help"] %></p>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+      <% when "rich_text" %>
+        <div class="form-group">
+          <label for="<%= input_id %>" class="form-label text-sm">
+            <%= sub_field_config["label"] || sub_field_name.humanize %>
+            <% if sub_field_config["required"] %>
+              <span class="text-destructive">*</span>
+            <% end %>
+          </label>
+          <textarea id="<%= input_id %>"
+                    name="<%= input_name %>"
+                    class="tinymce form-textarea h-32"
+                    data-controller="admin--tinymce"><%= (current_sub_val || "")&.html_safe %></textarea>
+          <% if sub_field_config["help"] %>
+            <p class="form-help text-xs"><%= sub_field_config["help"] %></p>
+          <% end %>
+        </div>
+
+      <% when "number", "integer" %>
+        <div class="form-group">
+          <label for="<%= input_id %>" class="form-label text-sm">
+            <%= sub_field_config["label"] || sub_field_name.humanize %>
+            <% if sub_field_config["required"] %>
+              <span class="text-destructive">*</span>
+            <% end %>
+          </label>
+          <input type="number"
+                 id="<%= input_id %>"
+                 name="<%= input_name %>"
+                 class="form-input"
+                 placeholder="<%= sub_field_config["placeholder"] %>"
+                 value="<%= current_sub_val || "" %>"
+                 min="<%= sub_field_config["min"] %>"
+                 max="<%= sub_field_config["max"] %>" />
+          <% if sub_field_config["help"] %>
+            <p class="form-help text-xs"><%= sub_field_config["help"] %></p>
+          <% end %>
+        </div>
+
+      <% when "image" %>
+        <%
+          # Extract image data from current value
+          image_data = if current_sub_val.is_a?(Hash)
+                         current_sub_val
+                       else
+                         current_sub_val.present? ? { "attachment_key" => current_sub_val } : {}
+                       end
+          attachment_key = image_data["attachment_key"]
+          alt_text = image_data["alt_text"] || ""
+          dimension_desktop = image_data["dimension_desktop"] || ""
+          dimension_mobile = image_data["dimension_mobile"] || ""
+        %>
+        <div class="form-group">
+          <label for="<%= input_id %>" class="form-label text-sm">
+            <%= sub_field_config["label"] || sub_field_name.humanize %>
+            <% if sub_field_config["required"] %>
+              <span class="text-destructive">*</span>
+            <% end %>
+          </label>
+
+          <div data-controller="admin--image-cropper"
+               data-admin--image-cropper-crop-ratios-value="<%= (sub_field_config["crop_ratios"] || []).to_json %>"
+               data-admin--image-cropper-field-name-value="<%= field_name %>_<%= sub_field_name %>"
+               data-admin--image-cropper-max-size-value="<%= sub_field_config["max_size"] || 10485760 %>"
+               data-admin--image-cropper-accept-types-value='["image/jpeg", "image/jpg", "image/png", "image/webp"]'
+               class="space-y-3">
+
+            <!-- Hidden File Input -->
+            <input type="file"
+                   id="<%= input_id %>"
+                   name="pod_temp_files[<%= field_name %>][<%= sub_field_name %>]"
+                   accept="<%= sub_field_config["accept"] || 'image/*' %>"
+                   data-admin--image-cropper-target="input"
+                   class="sr-only"
+                   style="display: none;" />
+
+            <!-- Drag & Drop Upload Area -->
+            <div data-admin--image-cropper-target="uploadArea"
+                 data-action="click->admin--image-cropper#triggerFileInput dragover->admin--image-cropper#handleDragOver dragleave->admin--image-cropper#handleDragLeave drop->admin--image-cropper#handleDrop"
+                 class="<%= attachment_key.present? ? 'hidden' : '' %> relative border-2 border-dashed border-border hover:border-primary/50 bg-muted/30 hover:bg-muted/50 rounded-lg p-6 text-center cursor-pointer transition-colors group">
+
+              <!-- Upload Icon -->
+              <div class="mx-auto w-10 h-10 text-muted-foreground group-hover:text-primary mb-3 transition-colors">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+
+              <!-- Upload Text -->
+              <div class="space-y-1">
+                <p class="text-xs font-medium text-card-foreground group-hover:text-primary transition-colors">
+                  Click to upload or drag & drop
+                </p>
+                <p class="text-xs text-muted-foreground">
+                  Up to <%= ((sub_field_config["max_size"] || 10485760) / 1.megabyte).round %>MB
+                </p>
+              </div>
+
+              <!-- Drag Over Overlay -->
+              <div data-admin--image-cropper-target="dragOverlay"
+                   class="hidden absolute inset-0 bg-primary/10 border-2 border-primary rounded-lg flex items-center justify-center">
+                <div class="text-primary font-medium text-sm">Drop image here</div>
+              </div>
+            </div>
+
+            <!-- Current Image Preview -->
+            <div data-admin--image-cropper-target="imagePreview"
+                 class="<%= attachment_key.present? ? '' : 'hidden' %> relative group">
+
+              <div class="relative overflow-hidden rounded-lg border border-border shadow-sm bg-background">
+                <img data-admin--image-cropper-target="preview"
+                     alt="<%= alt_text %>"
+                     class="w-auto m-auto max-w-xs h-auto object-cover"
+                     loading="lazy" />
+
+                <!-- Image Overlay Actions -->
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button type="button"
+                          data-action="click->admin--image-cropper#replaceImage"
+                          class="btn-primary-sm text-xs">
+                    <%= action_icon("replace", class: "w-3 h-3 text-white") %>
+                    Replace
+                  </button>
+                  <button type="button"
+                          data-action="click->admin--image-cropper#removeImage"
+                          class="btn-danger-sm text-xs">
+                    <%= action_icon("delete", class: "w-3 h-3 text-white") %>
+                    Remove
+                  </button>
+                </div>
+              </div>
+
+              <!-- Image Info -->
+              <div class="mt-1 text-xs text-muted-foreground">
+                <span data-admin--image-cropper-target="imageInfo">Loading...</span>
+              </div>
+            </div>
+
+            <!-- Alt Text Input -->
+            <div class="form-group">
+              <label for="pod_alt_<%= field_name %>_<%= sub_field_name %>" class="form-label text-xs">Alt Text</label>
+              <input type="text"
+                     id="pod_alt_<%= field_name %>_<%= sub_field_name %>"
+                     name="pod[alt_texts][<%= field_name %>][<%= sub_field_name %>]"
+                     data-admin--image-cropper-target="altInput"
+                     class="form-input text-sm"
+                     placeholder="Describe this image"
+                     value="<%= alt_text %>" />
+            </div>
+
+            <div class="grid form-grid gap-3 grid-cols-2">
+              <!-- desktop dimensions Input -->
+              <div class="form-group">
+                <label for="pod_dimension_desktop_<%= field_name %>_<%= sub_field_name %>" class="form-label text-xs">Desktop Dimensions</label>
+                <input type="text"
+                       id="pod_dimension_desktop_<%= field_name %>_<%= sub_field_name %>"
+                       name="pod[dimension_desktops][<%= field_name %>][<%= sub_field_name %>]"
+                       class="form-input text-sm"
+                       placeholder="1200,630"
+                       value="<%= dimension_desktop %>" />
+              </div>
+
+              <!-- mobile dimensions Input -->
+              <div class="form-group">
+                <label for="pod_dimension_mobile_<%= field_name %>_<%= sub_field_name %>" class="form-label text-xs">Mobile Dimensions</label>
+                <input type="text"
+                       id="pod_dimension_mobile_<%= field_name %>_<%= sub_field_name %>"
+                       name="pod[dimension_mobiles][<%= field_name %>][<%= sub_field_name %>]"
+                       class="form-input text-sm"
+                       placeholder="630,1200"
+                       value="<%= dimension_mobile %>" />
+              </div>
+            </div>
+
+            <!-- Hidden field for image data (structured JSON) -->
+            <input type="hidden"
+                   name="<%= input_name %>"
+                   value="<%= image_data.present? ? image_data.to_json : '' %>"
+                   data-admin--image-cropper-target="attachmentKey"
+                   data-attachment-key="<%= field_name %>_<%= sub_field_name %>" />
+
+            <% if sub_field_config["help"] %>
+              <p class="form-help text-xs"><%= sub_field_config["help"] %></p>
+            <% end %>
+          </div>
+        </div>
+
+      <% else %>
+        <!-- Fallback for unknown field types -->
+        <div class="form-group">
+          <label for="<%= input_id %>" class="form-label text-sm">
+            <%= sub_field_config["label"] || sub_field_name.humanize %>
+          </label>
+          <input type="text"
+                 id="<%= input_id %>"
+                 name="<%= input_name %>"
+                 class="form-input"
+                 placeholder="<%= sub_field_config["placeholder"] %>"
+                 value="<%= current_sub_val || "" %>" />
+          <% if sub_field_config["help"] %>
+            <p class="form-help text-xs"><%= sub_field_config["help"] %></p>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

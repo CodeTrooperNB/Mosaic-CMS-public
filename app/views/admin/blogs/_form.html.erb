@@ -1,0 +1,167 @@
+<%= form_with model: [:admin, @blog], local: true, html: { class: "space-y-6", multipart: true } do |f| %>
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2 space-y-6">
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        <div class="form-group">
+          <%= f.label :title, class: "form-label" %>
+          <%= f.text_field :title, required: true,
+                           class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @blog.errors[:title].present?}" %>
+          <% if @blog.errors[:title].present? %>
+            <p class="form-error"><%= @blog.errors[:title].first %></p>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :slug, class: "form-label" %>
+          <%= f.text_field :slug,
+                           placeholder: "Auto-generated from title if left blank",
+                           class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @blog.errors[:slug].present?}" %>
+          <% if @blog.errors[:slug].present? %>
+            <p class="form-error"><%= @blog.errors[:slug].first %></p>
+          <% end %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label :author, class: "form-label" %>
+          <%= f.text_field :author,
+                           placeholder: "Displayed author name (defaults to admin user)",
+                           class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if @blog.errors[:author].present?}" %>
+          <% if @blog.errors[:author].present? %>
+            <p class="form-error"><%= @blog.errors[:author].first %></p>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="form-group mb-3">
+        <%= f.label :excerpt, class: "form-label" %>
+        <div class="text-xs text-muted-foreground mb-2">Short summary used in listings and meta descriptions.</div>
+        <%= f.text_area :excerpt, rows: 3, class: "form-textarea" %>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-group">
+          <%= f.label :seo_title, "SEO Title", class: "form-label" %>
+          <div class="text-xs text-muted-foreground mb-2">Overrides the meta title shown in search results.</div>
+          <%= f.text_field :seo_title, class: "form-input" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :seo_description, "SEO Description", class: "form-label" %>
+          <div class="text-xs text-muted-foreground mb-2">Displayed as the search snippet (160 characters recommended).</div>
+          <%= f.text_area :seo_description, rows: 3, class: "form-textarea" %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :content, "Content", class: "form-label" %>
+        <div class="text-xs text-muted-foreground mb-2">Supports rich text formatting and inline images.</div>
+        <%= f.text_area :content,
+                        value: (@blog.content.respond_to?(:body) ? @blog.content&.body&.to_html : @blog.content.to_s),
+                        class: "form-textarea tinymce",
+                        data: { controller: "admin--tinymce", admin__tinymce_config_value: "rich_text" },
+                        rows: 15 %>
+        <% if @blog.errors[:content].present? %>
+          <p class="form-error"><%= @blog.errors[:content].first %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="lg:col-span-1 space-y-6">
+      <div class="bg-card border border-border rounded-lg p-4 space-y-4">
+        <div>
+          <%= f.label :cover_image, "Cover image", class: "form-label" %>
+          <p class="text-xs text-muted-foreground mt-1">Shown on listings and at the top of the blog post.</p>
+        </div>
+
+        <% if @blog.cover_image.attached? %>
+          <div class="space-y-3">
+            <div class="aspect-video bg-muted rounded-lg overflow-hidden">
+              <%= image_tag @blog.cover_image_variant(:card), alt: @blog.title, class: "w-full h-full object-cover" %>
+            </div>
+            <div class="flex items-center gap-2">
+              <%= f.check_box :remove_cover_image, { class: "form-checkbox" }, "1", "0" %>
+              <%= f.label :remove_cover_image, "Remove current image", class: "form-label-inline !mb-0" %>
+            </div>
+          </div>
+        <% end %>
+
+        <%= f.file_field :cover_image,
+                         accept: "image/png,image/jpeg,image/webp,image/avif",
+                         class: "form-input" %>
+        <p class="text-xs text-muted-foreground">Recommended size 1600×900px. Supported formats: JPG, PNG, WebP, AVIF.</p>
+      </div>
+
+      <div class="bg-card border border-border rounded-lg p-4 space-y-4">
+        <div class="form-group">
+          <%= f.label :blog_category_id, "Category", class: "form-label" %>
+          <%= f.collection_select :blog_category_id, @blog_categories, :id, :name,
+                                  { include_blank: "Select a category" },
+                                  { class: "form-select" } %>
+          <% if @blog.errors[:blog_category_id].present? || @blog.errors[:blog_category].present? %>
+            <p class="form-error"><%= (@blog.errors[:blog_category_id] + @blog.errors[:blog_category]).first %></p>
+          <% end %>
+        </div>
+        <div class="form-group">
+          <%= f.label :new_category_name, "Create New Category", class: "form-label" %>
+          <%= f.text_field :new_category_name,
+                           value: @blog.new_category_name,
+                           placeholder: "Enter a category name",
+                           class: "form-input" %>
+          <p class="text-xs text-muted-foreground mt-1">Provide a name to create and automatically select a new category when this blog is saved.</p>
+        </div>
+      </div>
+
+      <div class="bg-card border border-border rounded-lg p-4 space-y-4">
+        <div class="form-group">
+          <%= f.label :blog_tag_ids, "Tags", class: "form-label" %>
+          <%= render "admin/blogs/tag_checkboxes", tags: @blog_tags, selected_tag_ids: @blog.blog_tag_ids %>
+        </div>
+        <div class="form-group">
+          <%= f.label :new_tag_names, "Create New Tags", class: "form-label" %>
+          <%= f.text_field :new_tag_names,
+                           value: @blog.new_tag_names,
+                           placeholder: "Comma separated (e.g. Tag 1, Tag 2, Tag 3)",
+                           class: "form-input" %>
+          <p class="text-xs text-muted-foreground mt-1">New tags will be created if they do not already exist and added to this blog on save.</p>
+        </div>
+      </div>
+
+      <div class="bg-card border border-border rounded-lg p-4 space-y-4">
+        <div class="flex items-start gap-3">
+          <%= f.check_box :visible, class: "form-checkbox mt-1" %>
+          <div>
+            <%= f.label :visible, "Display on frontend", class: "form-label-inline !mb-0 font-medium" %>
+            <p class="text-xs text-muted-foreground">When enabled, the blog can appear on the public site once it reaches the publish date.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <%= f.label :published_at, "Publish at", class: "form-label" %>
+          <%= f.datetime_field :published_at,
+                               value: (@blog.published_at&.strftime("%Y-%m-%dT%H:%M")),
+                               class: "form-input" %>
+          <p class="text-xs text-muted-foreground mt-2">Leave blank to keep as draft, or choose a future date to schedule.</p>
+        </div>
+        <% if @blog.persisted? %>
+          <div class="rounded-md p-3 bg-muted">
+            <% if @blog.displayable? %>
+              <div class="text-xs font-medium text-success">Live on site</div>
+            <% elsif @blog.scheduled? %>
+              <div class="text-xs font-medium text-warning">Scheduled for <%= l @blog.published_at, format: :long %></div>
+            <% else %>
+              <div class="text-xs font-medium text-muted-foreground">Draft</div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-start gap-3 pt-6 border-t border-border">
+    <% if @blog.persisted? %>
+      <%= f.submit "Update Blog", class: "btn-primary-sm" %>
+      <%= link_to "Cancel", admin_blog_path(@blog), class: "btn-secondary-sm" %>
+    <% else %>
+      <%= f.submit "Create Blog", class: "btn-primary-sm" %>
+      <%= link_to "Cancel", admin_blogs_path, class: "btn-secondary-sm" %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,54 @@
+<% content_for :page_title, 'Create Admin Account' %>
+<% content_for :page_subtitle, 'Register a new admin user' %>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), data: { turbo: false }, html: { class: "space-y-6" }) do |f| %>
+  <%= render "admin/devise/shared/error_messages", resource: resource %>
+
+  <div>
+    <%= f.label :email, class: "block text-sm font-medium text-card-foreground mb-2" %>
+    <%= f.email_field :email,
+                      autofocus: true,
+                      autocomplete: "email",
+                      class: "block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors",
+                      placeholder: "Enter email address" %>
+  </div>
+
+  <div>
+    <%= f.label :password, class: "block text-sm font-medium text-card-foreground mb-2" %>
+    <%= f.password_field :password,
+                         autocomplete: "new-password",
+                         class: "block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors",
+                         placeholder: "Enter password" %>
+    <% if @minimum_password_length %>
+      <p class="mt-1 text-xs text-muted-foreground">
+        <em>(<%= @minimum_password_length %> characters minimum)</em>
+      </p>
+    <% end %>
+  </div>
+
+  <div>
+    <%= f.label :password_confirmation, class: "block text-sm font-medium text-card-foreground mb-2" %>
+    <%= f.password_field :password_confirmation,
+                         autocomplete: "new-password",
+                         class: "block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground placeholder-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors",
+                         placeholder: "Confirm password" %>
+  </div>
+
+  <div>
+    <%= f.label :role, class: "block text-sm font-medium text-card-foreground mb-2" %>
+    <%= f.select :role,
+                 AdminUser.roles.map {|key, value| [key.humanize, key]},
+                 { selected: 'editor' },
+                 { class: "block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 transition-colors" } %>
+  </div>
+
+  <div>
+    <%= f.submit "Create Account", class: "w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring/20 focus:ring-offset-2 transition-colors" %>
+  </div>
+<% end %>
+
+<div class="mt-6 text-center">
+  <%= link_to "Back to Sign In",
+              new_session_path(resource_name),
+              class: "text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors" %>
+</div>

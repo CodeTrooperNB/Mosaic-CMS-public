@@ -1,0 +1,30 @@
+<%= form_with url: blogs_path, method: :get, local: true, class: "space-y-6" do |f| %>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Category</label>
+            <%= select_tag :category,
+                            options_for_select([["All", ""]] + @categories.map { |category| [category.name, category.slug] },
+                                            @selected_category&.slug),
+                            class: "form-select" %>
+        </div>
+        <div class="md:col-span-2">
+            <span class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Tags</span>
+            <div class="flex flex-wrap gap-2">
+            <% @tags.each do |tag| %>
+                <% selected = @selected_tag_ids.include?(tag.id) %>
+                <label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 cursor-pointer hover:border-blue-300 hover:text-blue-600 dark:hover:border-blue-500 dark:hover:text-blue-400">
+                <%= check_box_tag "tags[]", tag.slug, selected, class: "form-checkbox" %>
+                <span><%= tag.name %></span>
+                </label>
+            <% end %>
+            <% if @tags.empty? %>
+                <span class="text-sm text-gray-500 dark:text-gray-400">No tags yet.</span>
+            <% end %>
+            </div>
+        </div>
+    </div>
+    <div class="flex items-center gap-3">
+        <%= f.submit "Apply Filters", class: "btn-primary" %>
+        <%= link_to "Clear", blogs_path, class: "btn-ghost" %>
+    </div>
+<% end %>

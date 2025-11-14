@@ -1,0 +1,52 @@
+<%
+  field_name = local_assigns[:field_name]
+  item_schema = local_assigns[:item_schema] || {}
+  item_data = local_assigns[:item_data] || {}
+  item_index = local_assigns[:item_index] || 0
+%>
+
+<div data-admin--array-manager-target="arrayItem"
+     data-item-index="<%= item_index %>"
+     class="sortable-item border border-border rounded-lg bg-card transition-all duration-200 mb-3">
+
+  <!-- Item Header -->
+  <div class="flex items-center justify-between p-4 border-b border-border bg-muted/30">
+    <button type="button"
+            data-action="click->admin--array-manager#toggleItem"
+            data-admin--array-manager-target="toggleButton"
+            class="flex items-center gap-2 text-sm font-medium text-card-foreground hover:text-primary">
+      <%= action_icon("expand", class: "w-4 h-4 transition-transform", data: { "admin--array-manager-target": "toggleIcon" }, style: "transform: rotate(-90deg)") %>
+      <span data-admin--array-manager-target="itemTitle">
+        <%= item_schema.keys.first ? "#{item_schema.keys.first.humanize}: #{item_data[item_schema.keys.first] || 'New Item'}" : "Item #{item_index + 1}" %>
+      </span>
+    </button>
+
+    <div class="flex items-center gap-1">
+      <!-- Drag Handle -->
+      <div class="p-1 text-muted-foreground hover:text-card-foreground cursor-grab active:cursor-grabbing transition-colors sortable-handle"
+           title="Drag to reorder">
+        <%= action_icon("drag", class: "w-4 h-4") %>
+      </div>
+
+      <!-- Delete Button -->
+      <button type="button"
+              data-action="click->admin--array-manager#removeItem"
+              class="p-1 text-muted-foreground hover:text-destructive transition-colors"
+              title="Remove item">
+        <%= action_icon("delete", class: "w-4 h-4") %>
+      </button>
+    </div>
+  </div>
+
+  <!-- Item Content (collapsed by default) -->
+  <div data-admin--array-manager-target="itemContent" class="p-4 space-y-4" style="display: none;">
+    <% item_schema.each do |sub_field_name, sub_field_config| %>
+      <%= render "admin/pods/array_item_field",
+                 field_name: field_name,
+                 item_index: item_index,
+                 sub_field_name: sub_field_name,
+                 sub_field_config: sub_field_config,
+                 current_value: item_data[sub_field_name] %>
+    <% end %>
+  </div>
+</div>

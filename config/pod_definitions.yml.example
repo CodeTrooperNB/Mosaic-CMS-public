@@ -1,0 +1,2078 @@
+# Mosaic CMS Pod Definitions
+# This file defines all available pod types, their schemas, validation rules, and UI configurations
+
+pod_definitions:
+  # ====================
+  # BASIC CONTENT PODS
+  # ====================
+
+  basic_text:
+    name: "Basic Text Block"
+    description: "Simple text content with rich text formatting"
+    category: "content"
+    icon: "text"
+    schema:
+      content:
+        type: rich_text
+        label: "Content"
+        required: true
+        toolbar: "basic"
+        placeholder: "Enter your content here..."
+      text_align:
+        type: select
+        label: "Text Alignment"
+        options:
+          - value: "left"
+            label: "Left"
+          - value: "center"
+            label: "Center"
+          - value: "right"
+            label: "Right"
+        default: "left"
+      container_width:
+        type: select
+        label: "Container Width"
+        options:
+          - value: "narrow"
+            label: "Narrow (prose width)"
+          - value: "standard"
+            label: "Standard"
+          - value: "wide"
+            label: "Wide"
+        default: "standard"
+
+  heading_block:
+    name: "Heading Block"
+    description: "Standalone heading with optional subtitle"
+    category: "content"
+    icon: "heading"
+    schema:
+      heading:
+        type: text
+        label: "Main Heading"
+        required: true
+        placeholder: "Your heading here"
+      heading_level:
+        type: select
+        label: "Heading Level"
+        options:
+          - value: "h1"
+            label: "H1"
+          - value: "h2"
+            label: "H2"
+          - value: "h3"
+            label: "H3"
+          - value: "h4"
+            label: "H4"
+        default: "h2"
+      subtitle:
+        type: text
+        label: "Subtitle"
+        placeholder: "Optional subtitle"
+      text_align:
+        type: select
+        label: "Text Alignment"
+        options:
+          - value: "left"
+            label: "Left"
+          - value: "center"
+            label: "Center"
+          - value: "right"
+            label: "Right"
+        default: "center"
+
+  # ====================
+  # HERO & BANNER PODS
+  # ====================
+
+  hero_banner:
+    name: "Hero Banner"
+    description: "Large hero section with background image and call-to-action"
+    category: "headers"
+    icon: "hero"
+    schema:
+      title:
+        type: text
+        label: "Main Title"
+        required: true
+        placeholder: "Your compelling headline"
+      subtitle:
+        type: text
+        label: "Subtitle"
+        placeholder: "Supporting message"
+      description:
+        type: rich_text
+        label: "Description"
+        toolbar: "minimal"
+        placeholder: "Brief description or value proposition"
+      background_image:
+        type: image
+        label: "Background Image"
+        required: true
+        crop_ratios: ["16:9", "21:9", "2:1"]
+        accept: "image/*"
+      background_overlay:
+        type: select
+        label: "Background Overlay"
+        options:
+          - value: "none"
+            label: "None"
+          - value: "light"
+            label: "Light"
+          - value: "medium"
+            label: "Medium"
+          - value: "dark"
+            label: "Dark"
+        default: "medium"
+      text_color:
+        type: select
+        label: "Text Color"
+        options:
+          - value: "white"
+            label: "White"
+          - value: "black"
+            label: "Black"
+          - value: "brand"
+            label: "Brand Color"
+        default: "white"
+      content_position:
+        type: select
+        label: "Content Position"
+        options:
+          - value: "center"
+            label: "Center"
+          - value: "left"
+            label: "Left"
+          - value: "right"
+            label: "Right"
+        default: "center"
+      height:
+        type: select
+        label: "Banner Height"
+        options:
+          - value: "small"
+            label: "Small (400px)"
+          - value: "medium"
+            label: "Medium (600px)"
+          - value: "large"
+            label: "Large (800px)"
+          - value: "fullscreen"
+            label: "Full Screen"
+        default: "large"
+      cta_primary:
+        type: object
+        label: "Primary Call-to-Action"
+        schema:
+          text:
+            type: text
+            label: "Button Text"
+            placeholder: "Get Started"
+          url:
+            type: url
+            label: "Button URL"
+            placeholder: "https://example.com"
+          style:
+            type: select
+            label: "Button Style"
+            options:
+              - value: "primary"
+                label: "Primary"
+              - value: "secondary"
+                label: "Secondary"
+              - value: "outline"
+                label: "Outline"
+            default: "primary"
+      cta_secondary:
+        type: object
+        label: "Secondary Call-to-Action"
+        schema:
+          text:
+            type: text
+            label: "Button Text"
+            placeholder: "Learn More"
+          url:
+            type: url
+            label: "Button URL"
+            placeholder: "https://example.com"
+          style:
+            type: select
+            label: "Button Style"
+            options:
+              - value: "secondary"
+                label: "Secondary"
+              - value: "outline"
+                label: "Outline"
+              - value: "link"
+                label: "Text Link"
+            default: "outline"
+
+  sliver_banner:
+    name: "Sliver Banner"
+    description: "Thin announcement banner for promotions or notices"
+    category: "headers"
+    icon: "banner"
+    schema:
+      message:
+        type: text
+        label: "Banner Message"
+        required: true
+        placeholder: "🎉 Special offer - 50% off all plans!"
+      background_color:
+        type: select
+        label: "Background Color"
+        options:
+          - value: "primary"
+            label: "Primary Brand"
+          - value: "secondary"
+            label: "Secondary Brand"
+          - value: "success"
+            label: "Green (Success)"
+          - value: "warning"
+            label: "Yellow (Warning)"
+          - value: "danger"
+            label: "Red (Alert)"
+          - value: "info"
+            label: "Blue (Info)"
+        default: "primary"
+      text_color:
+        type: select
+        label: "Text Color"
+        options:
+          - value: "white"
+            label: "White"
+          - value: "black"
+            label: "Black"
+        default: "white"
+      link_url:
+        type: url
+        label: "Click URL (optional)"
+        placeholder: "https://example.com/promotion"
+      dismissible:
+        type: boolean
+        label: "Allow Dismissal"
+        help: "Show close button to hide banner"
+        default: false
+      position:
+        type: select
+        label: "Position"
+        options:
+          - value: "top"
+            label: "Top of Page"
+          - value: "bottom"
+            label: "Bottom of Page"
+        default: "top"
+
+  # ====================
+  # LAYOUT PODS
+  # ====================
+
+  two_column_image_text:
+    name: "Two Column: Image & Text"
+    description: "Side-by-side image and text content with reversible layout"
+    category: "layout"
+    icon: "columns"
+    schema:
+      title:
+        type: text
+        label: "Section Title"
+        placeholder: "Optional section title"
+      image:
+        type: image
+        label: "Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      content:
+        type: rich_text
+        label: "Text Content"
+        required: true
+        toolbar: "advanced"
+        placeholder: "Your content here..."
+      layout:
+        type: select
+        label: "Layout Direction"
+        options:
+          - value: "image_left"
+            label: "Image Left, Text Right"
+          - value: "image_right"
+            label: "Image Right, Text Left"
+        default: "image_left"
+      vertical_alignment:
+        type: select
+        label: "Vertical Alignment"
+        options:
+          - value: "top"
+            label: "Top"
+          - value: "center"
+            label: "Center"
+          - value: "bottom"
+            label: "Bottom"
+        default: "center"
+      column_ratio:
+        type: select
+        label: "Column Width Ratio"
+        options:
+          - value: "50-50"
+            label: "Equal (50/50)"
+          - value: "60-40"
+            label: "Text Heavy (60/40)"
+          - value: "40-60"
+            label: "Image Heavy (40/60)"
+        default: "50-50"
+      background_color:
+        type: select
+        label: "Background Color"
+        options:
+          - value: "transparent"
+            label: "Transparent"
+          - value: "white"
+            label: "White"
+          - value: "gray-50"
+            label: "Light Gray"
+          - value: "primary-50"
+            label: "Light Brand"
+        default: "transparent"
+
+  three_column_features:
+    name: "Three Column Features"
+    description: "Three equal columns for features, services, or benefits"
+    category: "layout"
+    icon: "grid"
+    schema:
+      title:
+        type: text
+        label: "Section Title"
+        placeholder: "Our Features"
+      subtitle:
+        type: text
+        label: "Section Subtitle"
+        placeholder: "Why choose us"
+      columns:
+        type: array
+        label: "Feature Columns"
+        min_items: 1
+        max_items: 4
+        item_schema:
+          icon:
+            type: image
+            label: "Feature Icon"
+            crop_ratios: ["1:1"]
+            accept: "image/svg+xml,image/png,image/jpeg"
+          title:
+            type: text
+            label: "Feature Title"
+            required: true
+            placeholder: "Feature name"
+          description:
+            type: rich_text
+            label: "Feature Description"
+            required: true
+            toolbar: "minimal"
+            placeholder: "Describe this feature..."
+          link_url:
+            type: url
+            label: "Learn More URL"
+            placeholder: "https://example.com/feature"
+          link_text:
+            type: text
+            label: "Link Text"
+            placeholder: "Learn more"
+            default: "Learn more"
+      layout_style:
+        type: select
+        label: "Layout Style"
+        options:
+          - value: "cards"
+            label: "Card Style"
+          - value: "minimal"
+            label: "Minimal"
+          - value: "centered"
+            label: "Centered Icons"
+        default: "cards"
+
+  # ====================
+  # CONTENT BLOCKS
+  # ====================
+
+  content_with_background:
+    name: "Content Block with Background"
+    description: "Rich content with customizable background image or color"
+    category: "content"
+    icon: "image-text"
+    schema:
+      content:
+        type: rich_text
+        label: "Content"
+        required: true
+        toolbar: "advanced"
+        placeholder: "Your content here..."
+      background_type:
+        type: select
+        label: "Background Type"
+        options:
+          - value: "color"
+            label: "Solid Color"
+          - value: "image"
+            label: "Background Image"
+          - value: "gradient"
+            label: "Gradient"
+        default: "color"
+      background_color:
+        type: select
+        label: "Background Color"
+        condition:
+          field: "background_type"
+          value: ["color", "gradient"]
+        options:
+          - value: "white"
+            label: "White"
+          - value: "gray-50"
+            label: "Light Gray"
+          - value: "gray-900"
+            label: "Dark Gray"
+          - value: "primary-50"
+            label: "Light Brand"
+          - value: "primary-900"
+            label: "Dark Brand"
+        default: "gray-50"
+      background_image:
+        type: image
+        label: "Background Image"
+        condition:
+          field: "background_type"
+          value: ["image"]
+        crop_ratios: ["16:9", "21:9", "4:3"]
+        accept: "image/*"
+      background_overlay:
+        type: select
+        label: "Background Overlay"
+        condition:
+          field: "background_type"
+          value: ["image"]
+        options:
+          - value: "none"
+            label: "None"
+          - value: "light"
+            label: "Light"
+          - value: "medium"
+            label: "Medium"
+          - value: "dark"
+            label: "Dark"
+        default: "medium"
+      text_color:
+        type: select
+        label: "Text Color"
+        options:
+          - value: "default"
+            label: "Default (Auto)"
+          - value: "white"
+            label: "White"
+          - value: "black"
+            label: "Black"
+          - value: "brand"
+            label: "Brand Color"
+        default: "default"
+      padding:
+        type: select
+        label: "Padding Size"
+        options:
+          - value: "small"
+            label: "Small"
+          - value: "medium"
+            label: "Medium"
+          - value: "large"
+            label: "Large"
+          - value: "extra-large"
+            label: "Extra Large"
+        default: "medium"
+      container_width:
+        type: select
+        label: "Content Width"
+        options:
+          - value: "narrow"
+            label: "Narrow"
+          - value: "standard"
+            label: "Standard"
+          - value: "wide"
+            label: "Wide"
+          - value: "full"
+            label: "Full Width"
+        default: "standard"
+
+  usp_section:
+    name: "Unique Selling Points (USP)"
+    description: "Highlight key benefits or selling points with icons"
+    category: "marketing"
+    icon: "star"
+    schema:
+      title:
+        type: text
+        label: "Section Title"
+        placeholder: "Why Choose Us"
+      subtitle:
+        type: text
+        label: "Section Subtitle"
+        placeholder: "What makes us different"
+      layout:
+        type: select
+        label: "Layout Style"
+        options:
+          - value: "horizontal"
+            label: "Horizontal (side by side)"
+          - value: "vertical"
+            label: "Vertical (stacked)"
+          - value: "grid"
+            label: "Grid Layout"
+        default: "horizontal"
+      usps:
+        type: array
+        label: "Selling Points"
+        min_items: 2
+        max_items: 6
+        item_schema:
+          title:
+            type: text
+            label: "USP Title"
+            required: true
+            placeholder: "Fast Delivery"
+          description:
+            type: rich_text
+            label: "Description"
+            toolbar: "minimal"
+            placeholder: "Get your order in 24 hours"
+          image:
+            type: image
+            label: "Image"
+            crop_ratios: [ "1:1" ]
+            accept: "image/*"
+          highlight:
+            type: boolean
+            label: "Highlight This USP"
+            help: "Make this USP stand out visually"
+            default: false
+      background_style:
+        type: select
+        label: "Background Style"
+        options:
+          - value: "transparent"
+            label: "Transparent"
+          - value: "light"
+            label: "Light Background"
+          - value: "cards"
+            label: "Individual Cards"
+        default: "transparent"
+
+  # ====================
+  # GALLERY & MEDIA
+  # ====================
+
+  image_gallery:
+    name: "Image Gallery"
+    description: "Grid-based image gallery with lightbox functionality"
+    category: "media"
+    icon: "gallery"
+    schema:
+      title:
+        type: text
+        label: "Gallery Title"
+        placeholder: "Photo Gallery"
+      description:
+        type: rich_text
+        label: "Gallery Description"
+        toolbar: "basic"
+        placeholder: "Browse through our collection..."
+      images:
+        type: array
+        label: "Gallery Images"
+        min_items: 1
+        item_schema:
+          image:
+            type: image
+            label: "Image"
+            required: true
+            crop_ratios: ["1:1", "4:3", "3:2", "16:9"]
+            accept: "image/*"
+          caption:
+            type: text
+            label: "Caption"
+            placeholder: "Optional image caption"
+          link_url:
+            type: url
+            label: "Link URL"
+            placeholder: "https://example.com"
+      layout:
+        type: select
+        label: "Gallery Layout"
+        options:
+          - value: "grid-2"
+            label: "2 Column Grid"
+          - value: "grid-3"
+            label: "3 Column Grid"
+          - value: "grid-4"
+            label: "4 Column Grid"
+          - value: "masonry"
+            label: "Masonry Layout"
+        default: "grid-3"
+      lightbox:
+        type: boolean
+        label: "Enable Lightbox"
+        help: "Allow full-screen image viewing"
+        default: true
+      lazy_loading:
+        type: boolean
+        label: "Lazy Loading"
+        help: "Load images as user scrolls"
+        default: true
+
+  image_slider:
+    name: "Image Slider"
+    description: "Full-width image slider with navigation controls"
+    category: "media"
+    icon: "slider"
+    schema:
+      title:
+        type: text
+        label: "Slider Title"
+        placeholder: "Featured Images"
+      slides:
+        type: array
+        label: "Slider Images"
+        min_items: 2
+        item_schema:
+          title:
+            type: text
+            label: "Slide Title"
+            placeholder: "Overlay title"
+          description:
+            type: rich_text
+            label: "Slide Description"
+            toolbar: "minimal"
+            placeholder: "Overlay description"
+          image:
+            type: image
+            label: "Slide Image"
+            required: true
+            crop_ratios: [ "16:9", "21:9", "3:1" ]
+            accept: "image/*"
+          cta_text:
+            type: text
+            label: "Call-to-Action Text"
+            placeholder: "Learn More"
+          cta_url:
+            type: url
+            label: "Call-to-Action URL"
+            placeholder: "https://example.com"
+      slider_height:
+        type: select
+        label: "Slider Height"
+        options:
+          - value: "small"
+            label: "Small (300px)"
+          - value: "medium"
+            label: "Medium (500px)"
+          - value: "large"
+            label: "Large (700px)"
+          - value: "auto"
+            label: "Auto (Based on Image)"
+        default: "medium"
+      autoplay:
+        type: boolean
+        label: "Auto-play Slides"
+        default: true
+      autoplay_speed:
+        type: number
+        label: "Auto-play Speed (seconds)"
+        condition:
+          field: "autoplay"
+          value: [true]
+        min: 2
+        max: 10
+        default: 5
+      show_navigation:
+        type: boolean
+        label: "Show Navigation Arrows"
+        default: true
+      show_indicators:
+        type: boolean
+        label: "Show Slide Indicators"
+        default: true
+      transition_effect:
+        type: select
+        label: "Transition Effect"
+        options:
+          - value: "slide"
+            label: "Slide"
+          - value: "fade"
+            label: "Fade"
+          - value: "zoom"
+            label: "Zoom"
+        default: "slide"
+
+  content_carousel:
+    name: "Content Carousel"
+    description: "Rotating carousel of content cards or testimonials"
+    category: "media"
+    icon: "carousel"
+    schema:
+      title:
+        type: text
+        label: "Carousel Title"
+        placeholder: "Featured Content"
+      subtitle:
+        type: text
+        label: "Carousel Subtitle"
+        placeholder: "Swipe to see more"
+      items:
+        type: array
+        label: "Carousel Items"
+        min_items: 3
+        item_schema:
+          title:
+            type: text
+            label: "Item Title"
+            required: true
+            placeholder: "Card title"
+          image:
+            type: image
+            label: "Item Image"
+            crop_ratios: [ "1:1", "4:3", "3:2" ]
+            accept: "image/*"
+          content:
+            type: rich_text
+            label: "Item Content"
+            required: true
+            toolbar: "basic"
+            placeholder: "Card content or description"
+          link_url:
+            type: url
+            label: "Link URL"
+            placeholder: "https://example.com"
+          link_text:
+            type: text
+            label: "Link Text"
+            placeholder: "Read more"
+            default: "Read more"
+      items_per_view:
+        type: select
+        label: "Items Visible"
+        options:
+          - value: "1"
+            label: "1 Item"
+          - value: "2"
+            label: "2 Items"
+          - value: "3"
+            label: "3 Items"
+          - value: "4"
+            label: "4 Items"
+        default: "3"
+      autoplay:
+        type: boolean
+        label: "Auto-rotate Items"
+        default: false
+      loop:
+        type: boolean
+        label: "Infinite Loop"
+        default: true
+      show_navigation:
+        type: boolean
+        label: "Show Navigation"
+        default: true
+
+  # ====================
+  # BLOG & CONTENT
+  # ====================
+
+  recent_blog_posts:
+    name: "Recent Blog Posts"
+    description: "Display latest blog posts with excerpts and images"
+    category: "blog"
+    icon: "blog"
+    schema:
+      title:
+        type: text
+        label: "Section Title"
+        placeholder: "Latest Blog Posts"
+        default: "Latest from Our Blog"
+      subtitle:
+        type: text
+        label: "Section Subtitle"
+        placeholder: "Stay updated with our latest insights"
+      post_count:
+        type: number
+        label: "Number of Posts"
+        min: 1
+        max: 12
+        default: 3
+      layout:
+        type: select
+        label: "Post Layout"
+        options:
+          - value: "grid"
+            label: "Grid Layout"
+          - value: "list"
+            label: "List Layout"
+          - value: "featured"
+            label: "Featured + List"
+        default: "grid"
+      show_excerpts:
+        type: boolean
+        label: "Show Post Excerpts"
+        default: true
+      show_dates:
+        type: boolean
+        label: "Show Publication Dates"
+        default: true
+      show_authors:
+        type: boolean
+        label: "Show Author Names"
+        default: true
+      show_categories:
+        type: boolean
+        label: "Show Post Categories"
+        default: false
+      excerpt_length:
+        type: number
+        label: "Excerpt Length (words)"
+        condition:
+          field: "show_excerpts"
+          value: [true]
+        min: 10
+        max: 100
+        default: 25
+      category_filter:
+        type: text
+        label: "Category Filter"
+        placeholder: "news,updates (comma-separated)"
+        help: "Only show posts from specific categories"
+      view_all_link:
+        type: object
+        label: "View All Posts Link"
+        schema:
+          show_link:
+            type: boolean
+            label: "Show 'View All' Link"
+            default: true
+          link_text:
+            type: text
+            label: "Link Text"
+            placeholder: "View All Posts"
+            default: "View All Posts"
+          link_url:
+            type: url
+            label: "Blog Page URL"
+            placeholder: "/blog"
+
+  article_showcase:
+    name: "Article Showcase"
+    description: "Manually curated article highlights with rich previews"
+    category: "blog"
+    icon: "article"
+    schema:
+      title:
+        type: text
+        label: "Showcase Title"
+        placeholder: "Featured Articles"
+      description:
+        type: rich_text
+        label: "Showcase Description"
+        toolbar: "basic"
+        placeholder: "Check out our most popular content"
+      articles:
+        type: array
+        label: "Featured Articles"
+        min_items: 1
+        max_items: 6
+        item_schema:
+          title:
+            type: text
+            label: "Article Title"
+            required: true
+            placeholder: "Article headline"
+          excerpt:
+            type: rich_text
+            label: "Article Excerpt"
+            required: true
+            toolbar: "basic"
+            placeholder: "Brief article summary..."
+          featured_image:
+            type: image
+            label: "Article Image"
+            required: true
+            crop_ratios: [ "16:9", "4:3", "1:1" ]
+            accept: "image/*"
+          author:
+            type: text
+            label: "Author Name"
+            placeholder: "John Doe"
+          published_date:
+            type: date
+            label: "Publication Date"
+          category:
+            type: text
+            label: "Category"
+            placeholder: "Technology"
+          read_time:
+            type: number
+            label: "Read Time (minutes)"
+            min: 1
+            max: 60
+            placeholder: "5"
+          article_url:
+            type: url
+            label: "Article URL"
+            required: true
+            placeholder: "https://example.com/article"
+          featured:
+            type: boolean
+            label: "Featured Article"
+            help: "Highlight this article"
+            default: false
+      layout_style:
+        type: select
+        label: "Layout Style"
+        options:
+          - value: "cards"
+            label: "Card Grid"
+          - value: "magazine"
+            label: "Magazine Style"
+          - value: "minimal"
+            label: "Minimal List"
+        default: "cards"
+
+  # ====================
+  # TESTIMONIALS & SOCIAL PROOF
+  # ====================
+
+  testimonials:
+    name: "Customer Testimonials"
+    description: "Display customer reviews and testimonials"
+    category: "social_proof"
+    icon: "testimonial"
+    schema:
+      title:
+        type: text
+        label: "Section Title"
+        placeholder: "What Our Customers Say"
+        default: "Customer Testimonials"
+      subtitle:
+        type: text
+        label: "Section Subtitle"
+        placeholder: "Don't just take our word for it"
+      testimonials:
+        type: array
+        label: "Testimonials"
+        min_items: 1
+        item_schema:
+          quote:
+            type: rich_text
+            label: "Testimonial Quote"
+            required: true
+            toolbar: "minimal"
+            placeholder: "This product changed my life..."
+          customer_name:
+            type: text
+            label: "Customer Name"
+            required: true
+            placeholder: "John Smith"
+          customer_title:
+            type: text
+            label: "Customer Title/Company"
+            placeholder: "CEO at Company Name"
+          customer_image:
+            type: image
+            label: "Customer Photo"
+            crop_ratios: ["1:1"]
+            accept: "image/*"
+          rating:
+            type: number
+            label: "Star Rating (1-5)"
+            min: 1
+            max: 5
+            default: 5
+          featured:
+            type: boolean
+            label: "Featured Testimonial"
+            help: "Highlight this testimonial"
+            default: false
+          product_service:
+            type: text
+            label: "Product/Service"
+            placeholder: "Pro Plan"
+      layout:
+        type: select
+        label: "Display Layout"
+        options:
+          - value: "grid"
+            label: "Grid Layout"
+          - value: "carousel"
+            label: "Carousel"
+          - value: "single"
+            label: "Single Testimonial"
+          - value: "masonry"
+            label: "Masonry Grid"
+        default: "grid"
+      show_ratings:
+        type: boolean
+        label: "Show Star Ratings"
+        default: true
+      show_photos:
+        type: boolean
+        label: "Show Customer Photos"
+        default: true
+      background_style:
+        type: select
+        label: "Background Style"
+        options:
+          - value: "transparent"
+            label: "Transparent"
+          - value: "light"
+            label: "Light Background"
+          - value: "cards"
+            label: "Card Style"
+        default: "cards"
+
+  # ====================
+  # FORMS & CTAs
+  # ====================
+
+  contact_form:
+    name: "Contact Form"
+    description: "Contact/Enquiry form that submits to the enquiries system"
+    category: "forms"
+    icon: "form"
+    schema:
+      form_title:
+        type: text
+        label: "Form Title"
+        placeholder: "Contact Us"
+        default: "Get In Touch"
+      form_description:
+        type: rich_text
+        label: "Form Description"
+        toolbar: "minimal"
+        placeholder: "We'd love to hear from you..."
+      show_phone:
+        type: boolean
+        label: "Show Phone Field"
+        default: true
+      show_company:
+        type: boolean
+        label: "Show Company Field"
+        default: false
+      show_subject:
+        type: boolean
+        label: "Show Subject Field"
+        default: true
+      message_label:
+        type: text
+        label: "Message Field Label"
+        default: "Message"
+        placeholder: "Your Message"
+      message_placeholder:
+        type: text
+        label: "Message Placeholder"
+        default: "Tell us more about your enquiry..."
+        placeholder: "Enter placeholder text"
+      submit_text:
+        type: text
+        label: "Submit Button Text"
+        default: "Send Message"
+        placeholder: "Send Message"
+      success_message:
+        type: text
+        label: "Success Message"
+        default: "Thank you! We'll get back to you soon."
+        placeholder: "Thank you message after submission"
+      form_layout:
+        type: select
+        label: "Form Layout"
+        options:
+          - value: "single_column"
+            label: "Single Column"
+          - value: "two_column"
+            label: "Two Column (Name/Email side-by-side)"
+        default: "single_column"
+      background_color:
+        type: select
+        label: "Form Background"
+        options:
+          - value: "transparent"
+            label: "Transparent"
+          - value: "white"
+            label: "White"
+          - value: "gray-50"
+            label: "Light Gray"
+          - value: "primary-50"
+            label: "Light Brand"
+        default: "white"
+      show_border:
+        type: boolean
+        label: "Show Border"
+        default: true
+
+  cta_section:
+    name: "Call-to-Action Section"
+    description: "Focused section driving users to take action"
+    category: "marketing"
+    icon: "cta"
+    schema:
+      title:
+        type: text
+        label: "CTA Title"
+        required: true
+        placeholder: "Ready to Get Started?"
+      subtitle:
+        type: text
+        label: "CTA Subtitle"
+        placeholder: "Join thousands of satisfied customers"
+      description:
+        type: rich_text
+        label: "Description"
+        toolbar: "basic"
+        placeholder: "Additional persuasive content..."
+      primary_button:
+        type: object
+        label: "Primary Button"
+        schema:
+          text:
+            type: text
+            label: "Button Text"
+            required: true
+            placeholder: "Start Free Trial"
+          url:
+            type: url
+            label: "Button URL"
+            required: true
+            placeholder: "https://app.example.com/signup"
+          style:
+            type: select
+            label: "Button Style"
+            options:
+              - value: "primary"
+                label: "Primary"
+              - value: "secondary"
+                label: "Secondary"
+              - value: "outline"
+                label: "Outline"
+            default: "primary"
+      secondary_button:
+        type: object
+        label: "Secondary Button"
+        schema:
+          text:
+            type: text
+            label: "Button Text"
+            placeholder: "Learn More"
+          url:
+            type: url
+            label: "Button URL"
+            placeholder: "https://example.com/features"
+          style:
+            type: select
+            label: "Button Style"
+            options:
+              - value: "secondary"
+                label: "Secondary"
+              - value: "outline"
+                label: "Outline"
+              - value: "link"
+                label: "Text Link"
+            default: "outline"
+      background_style:
+        type: select
+        label: "Background Style"
+        options:
+          - value: "solid"
+            label: "Solid Color"
+          - value: "gradient"
+            label: "Gradient"
+          - value: "image"
+            label: "Background Image"
+        default: "gradient"
+      background_color:
+        type: select
+        label: "Background Color"
+        condition:
+          field: "background_style"
+          value: ["solid", "gradient"]
+        options:
+          - value: "primary"
+            label: "Primary Brand"
+          - value: "secondary"
+            label: "Secondary Brand"
+          - value: "gray"
+            label: "Gray"
+          - value: "white"
+            label: "White"
+        default: "primary"
+      background_image:
+        type: image
+        label: "Background Image"
+        condition:
+          field: "background_style"
+          value: ["image"]
+        crop_ratios: ["16:9", "21:9"]
+        accept: "image/*"
+      text_alignment:
+        type: select
+        label: "Text Alignment"
+        options:
+          - value: "left"
+            label: "Left"
+          - value: "center"
+            label: "Center"
+          - value: "right"
+            label: "Right"
+        default: "center"
+
+  # ====================
+  # NAVIGATION & FOOTER
+  # ====================
+
+  footer:
+    name: "Site Footer"
+    description: "Comprehensive footer with links, contact info, and social media"
+    category: "navigation"
+    icon: "footer"
+    schema:
+      company_info:
+        type: object
+        label: "Company Information"
+        schema:
+          logo:
+            type: image
+            label: "Company Logo"
+            crop_ratios: ["2:1", "3:1"]
+            accept: "image/*"
+          name:
+            type: text
+            label: "Company Name"
+            placeholder: "Your Company"
+          tagline:
+            type: text
+            label: "Company Tagline"
+            placeholder: "Your trusted partner"
+          description:
+            type: rich_text
+            label: "Company Description"
+            toolbar: "basic"
+            placeholder: "Brief company description..."
+      contact_info:
+        type: object
+        label: "Contact Information"
+        schema:
+          address:
+            type: text
+            label: "Address"
+            placeholder: "123 Main St, City, State 12345"
+          phone:
+            type: text
+            label: "Phone Number"
+            placeholder: "+1 (555) 123-4567"
+          email:
+            type: email
+            label: "Email Address"
+            placeholder: "contact@company.com"
+          hours:
+            type: text
+            label: "Business Hours"
+            placeholder: "Mon-Fri 9AM-5PM"
+      link_sections:
+        type: array
+        label: "Link Sections"
+        max_items: 6
+        item_schema:
+          title:
+            type: text
+            label: "Section Title"
+            required: true
+            placeholder: "Products"
+          links:
+            type: array
+            label: "Section Links"
+            min_items: 1
+            item_schema:
+              text:
+                type: text
+                label: "Link Text"
+                required: true
+                placeholder: "About Us"
+              url:
+                type: url
+                label: "Link URL"
+                required: true
+                placeholder: "/about"
+              external:
+                type: boolean
+                label: "External Link"
+                help: "Opens in new tab"
+                default: false
+      social_media:
+        type: array
+        label: "Social Media Links"
+        item_schema:
+          platform:
+            type: select
+            label: "Social Platform"
+            required: true
+            options:
+              - value: "facebook"
+                label: "Facebook"
+              - value: "twitter"
+                label: "Twitter"
+              - value: "linkedin"
+                label: "LinkedIn"
+              - value: "instagram"
+                label: "Instagram"
+              - value: "youtube"
+                label: "YouTube"
+              - value: "github"
+                label: "GitHub"
+          url:
+            type: url
+            label: "Profile URL"
+            required: true
+            placeholder: "https://facebook.com/company"
+      newsletter_signup:
+        type: object
+        label: "Newsletter Signup"
+        schema:
+          show_signup:
+            type: boolean
+            label: "Show Newsletter Signup"
+            default: false
+          title:
+            type: text
+            label: "Signup Title"
+            condition:
+              field: "show_signup"
+              value: [true]
+            placeholder: "Stay Updated"
+          description:
+            type: text
+            label: "Signup Description"
+            condition:
+              field: "show_signup"
+              value: [true]
+            placeholder: "Get our latest news and updates"
+          button_text:
+            type: text
+            label: "Button Text"
+            condition:
+              field: "show_signup"
+              value: [true]
+            placeholder: "Subscribe"
+            default: "Subscribe"
+      copyright:
+        type: object
+        label: "Copyright Information"
+        schema:
+          text:
+            type: text
+            label: "Copyright Text"
+            placeholder: "© 2024 Company Name. All rights reserved."
+          links:
+            type: array
+            label: "Legal Links"
+            item_schema:
+              text:
+                type: text
+                label: "Link Text"
+                required: true
+                placeholder: "Privacy Policy"
+              url:
+                type: url
+                label: "Link URL"
+                required: true
+                placeholder: "/privacy"
+      theme:
+        type: select
+        label: "Footer Theme"
+        options:
+          - value: "light"
+            label: "Light"
+          - value: "dark"
+            label: "Dark"
+          - value: "brand"
+            label: "Brand Colors"
+        default: "dark"
+      layout:
+        type: select
+        label: "Footer Layout"
+        options:
+          - value: "columns"
+            label: "Multi-Column"
+          - value: "centered"
+            label: "Centered"
+          - value: "minimal"
+            label: "Minimal"
+        default: "columns"
+
+  # ====================
+  # PRICING & ECOMMERCE
+  # ====================
+
+  pricing_table:
+    name: "Pricing Table"
+    description: "Display pricing plans and packages"
+    category: "marketing"
+    icon: "pricing"
+    schema:
+      title:
+        type: text
+        label: "Pricing Title"
+        placeholder: "Choose Your Plan"
+        default: "Pricing Plans"
+      subtitle:
+        type: text
+        label: "Pricing Subtitle"
+        placeholder: "Select the perfect plan for your needs"
+      billing_toggle:
+        type: object
+        label: "Billing Period Toggle"
+        schema:
+          show_toggle:
+            type: boolean
+            label: "Show Billing Toggle"
+            help: "Allow switching between monthly/yearly"
+            default: true
+          monthly_label:
+            type: text
+            label: "Monthly Label"
+            condition:
+              field: "show_toggle"
+              value: [true]
+            placeholder: "Monthly"
+            default: "Monthly"
+          yearly_label:
+            type: text
+            label: "Yearly Label"
+            condition:
+              field: "show_toggle"
+              value: [true]
+            placeholder: "Yearly"
+            default: "Yearly"
+          yearly_discount:
+            type: text
+            label: "Yearly Discount Text"
+            condition:
+              field: "show_toggle"
+              value: [true]
+            placeholder: "Save 20%"
+      plans:
+        type: array
+        label: "Pricing Plans"
+        min_items: 1
+        max_items: 5
+        item_schema:
+          name:
+            type: text
+            label: "Plan Name"
+            required: true
+            placeholder: "Basic Plan"
+          description:
+            type: text
+            label: "Plan Description"
+            placeholder: "Perfect for individuals"
+          monthly_price:
+            type: text
+            label: "Monthly Price"
+            required: true
+            placeholder: "$9"
+          yearly_price:
+            type: text
+            label: "Yearly Price"
+            placeholder: "$90"
+          currency:
+            type: text
+            label: "Currency Symbol"
+            placeholder: "$"
+            default: "$"
+          billing_period:
+            type: text
+            label: "Billing Period"
+            placeholder: "per month"
+            default: "per month"
+          features:
+            type: array
+            label: "Plan Features"
+            min_items: 1
+            item_schema:
+              feature:
+                type: text
+                label: "Feature"
+                required: true
+                placeholder: "10GB Storage"
+              included:
+                type: boolean
+                label: "Included in Plan"
+                default: true
+              highlight:
+                type: boolean
+                label: "Highlight Feature"
+                default: false
+          cta_text:
+            type: text
+            label: "Button Text"
+            placeholder: "Get Started"
+            default: "Get Started"
+          cta_url:
+            type: url
+            label: "Button URL"
+            required: true
+            placeholder: "https://app.example.com/signup?plan=basic"
+          popular:
+            type: boolean
+            label: "Most Popular Plan"
+            help: "Highlight this plan as recommended"
+            default: false
+          ribbon_text:
+            type: text
+            label: "Ribbon Text"
+            condition:
+              field: "popular"
+              value: [true]
+            placeholder: "Most Popular"
+            default: "Most Popular"
+      additional_info:
+        type: rich_text
+        label: "Additional Information"
+        toolbar: "basic"
+        placeholder: "All plans include 24/7 support..."
+
+  # ====================
+  # FAQ & SUPPORT
+  # ====================
+
+  faq_section:
+    name: "FAQ Section"
+    description: "Frequently asked questions with expandable answers"
+    category: "support"
+    icon: "faq"
+    schema:
+      title:
+        type: text
+        label: "FAQ Title"
+        placeholder: "Frequently Asked Questions"
+        default: "FAQ"
+      subtitle:
+        type: text
+        label: "FAQ Subtitle"
+        placeholder: "Find answers to common questions"
+      faqs:
+        type: array
+        label: "FAQ Items"
+        min_items: 1
+        item_schema:
+          question:
+            type: text
+            label: "Question"
+            required: true
+            placeholder: "How does billing work?"
+          answer:
+            type: rich_text
+            label: "Answer"
+            required: true
+            toolbar: "advanced"
+            placeholder: "Detailed answer to the question..."
+          category:
+            type: text
+            label: "FAQ Category"
+            placeholder: "Billing"
+          featured:
+            type: boolean
+            label: "Featured FAQ"
+            help: "Show this FAQ prominently"
+            default: false
+      layout:
+        type: select
+        label: "FAQ Layout"
+        options:
+          - value: "accordion"
+            label: "Accordion (Expandable)"
+          - value: "tabs"
+            label: "Category Tabs"
+          - value: "grid"
+            label: "Grid Layout"
+        default: "accordion"
+      show_categories:
+        type: boolean
+        label: "Group by Categories"
+        default: false
+      search_enabled:
+        type: boolean
+        label: "Enable FAQ Search"
+        default: true
+      contact_cta:
+        type: object
+        label: "Still Have Questions?"
+        schema:
+          show_cta:
+            type: boolean
+            label: "Show Contact CTA"
+            default: true
+          title:
+            type: text
+            label: "CTA Title"
+            condition:
+              field: "show_cta"
+              value: [true]
+            placeholder: "Still have questions?"
+          description:
+            type: text
+            label: "CTA Description"
+            condition:
+              field: "show_cta"
+              value: [true]
+            placeholder: "Can't find what you're looking for?"
+          button_text:
+            type: text
+            label: "Button Text"
+            condition:
+              field: "show_cta"
+              value: [true]
+            placeholder: "Contact Support"
+            default: "Contact Support"
+          button_url:
+            type: url
+            label: "Button URL"
+            condition:
+              field: "show_cta"
+              value: [true]
+            placeholder: "/contact"
+
+  # ====================
+  # STATS & NUMBERS
+  # ====================
+
+  stats_counter:
+    name: "Statistics Counter"
+    description: "Animated counters showing impressive numbers"
+    category: "marketing"
+    icon: "stats"
+    schema:
+      title:
+        type: text
+        label: "Section Title"
+        placeholder: "Our Success in Numbers"
+      subtitle:
+        type: text
+        label: "Section Subtitle"
+        placeholder: "Trusted by thousands worldwide"
+      stats:
+        type: array
+        label: "Statistics"
+        min_items: 1
+        max_items: 6
+        item_schema:
+          number:
+            type: text
+            label: "Statistic Number"
+            required: true
+            placeholder: "10,000"
+          suffix:
+            type: text
+            label: "Number Suffix"
+            placeholder: "+"
+          prefix:
+            type: text
+            label: "Number Prefix"
+            placeholder: "$"
+          label:
+            type: text
+            label: "Statistic Label"
+            required: true
+            placeholder: "Happy Customers"
+          icon:
+            type: image
+            label: "Statistic Icon"
+            crop_ratios: ["1:1"]
+            accept: "image/svg+xml,image/png"
+          color:
+            type: select
+            label: "Accent Color"
+            options:
+              - value: "primary"
+                label: "Primary"
+              - value: "secondary"
+                label: "Secondary"
+              - value: "green"
+                label: "Green"
+              - value: "blue"
+                label: "Blue"
+              - value: "red"
+                label: "Red"
+            default: "primary"
+      layout:
+        type: select
+        label: "Layout Style"
+        options:
+          - value: "horizontal"
+            label: "Horizontal Row"
+          - value: "grid"
+            label: "Grid Layout"
+          - value: "vertical"
+            label: "Vertical Stack"
+        default: "horizontal"
+      animate_on_scroll:
+        type: boolean
+        label: "Animate When Visible"
+        help: "Numbers count up when scrolled into view"
+        default: true
+      background_style:
+        type: select
+        label: "Background Style"
+        options:
+          - value: "transparent"
+            label: "Transparent"
+          - value: "light"
+            label: "Light Background"
+          - value: "dark"
+            label: "Dark Background"
+          - value: "brand"
+            label: "Brand Background"
+        default: "light"
+
+  # ====================
+  # PEAK POD DEFINITIONS
+  # ====================
+
+  banner_main_pod:
+    name: "Main Banner Pod"
+    description: "Simple Banner that appears on the selected pages"
+    category: "headers"
+    icon: "banner"
+    schema:
+      banner_image:
+        type: image
+        label: "Banner Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      image_overlay:
+        type: image
+        label: "Banner Overlay Image"
+        required: false
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      url:
+        type: url
+        label: "Button URL"
+        placeholder: "https://example.com"
+      button_text:
+        type: text
+        label: "Button Text"
+        placeholder: "Product Category"
+
+  four_card_pod:
+    name: "Four Card Pod"
+    description: "Four cards that link to the specific product categories"
+    category: "layout"
+    icon: "grid"
+    schema:
+      card_one_image:
+        type: image
+        label: "Card 1 Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      card_one_url:
+        type: url
+        label: "Card 1 URL"
+        placeholder: "https://example.com"
+      card_one_text:
+        type: text
+        label: "Card 1 Text"
+        placeholder: "Product Category"
+      card_two_image:
+        type: image
+        label: "Card 2 Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      card_two_url:
+        type: url
+        label: "Card 2 URL"
+        placeholder: "https://example.com"
+      card_two_text:
+        type: text
+        label: "Card 2 Text"
+        placeholder: "Product Category"
+      card_three_image:
+        type: image
+        label: "Card 3 Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      card_three_url:
+        type: url
+        label: "Card 3 URL"
+        placeholder: "https://example.com"
+      card_three_text:
+        type: text
+        label: "Card 3 Text"
+        placeholder: "Product Category"
+      card_four_image:
+        type: image
+        label: "Card 4 Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      card_four_url:
+        type: url
+        label: "Card 4 URL"
+        placeholder: "https://example.com"
+      card_four_text:
+        type: text
+        label: "Card 4 Text"
+        placeholder: "Product Category"
+
+  lifestyle_image_four_prod:
+    name: "Lifestyle Image Four Product"
+    description: "This pod displays a lifestyle image as well as four product cards."
+    category: "content"
+    icon: "image"
+    schema:
+      image:
+        type: image
+        label: "Lifestyle Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      pod_orientation:
+        type: select
+        label: "Pod left right orientation"
+        options:
+          - value: "left"
+            label: "Left"
+          - value: "right"
+            label: "Right"
+        default: "left"
+
+  content_pod_four_card:
+    name: "Content Pod Four Card"
+    description: "Displays a set of four cards with three images as well as a card containing a title, text as well as a button link"
+    category: "content"
+    icon: "grid"
+    schema:
+      primary_card_image:
+        type: image
+        label: "Primary Card Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      sub_card_one_image:
+        type: image
+        label: "Sub-Card 1 Image"
+        required: false
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      sub_card_two_image:
+        type: image
+        label: "Sub-Card 2 Image"
+        required: false
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      title:
+        type: text
+        label: "Title"
+        placeholder: "Card Title"
+      content:
+        type: rich_text
+        label: "Content"
+        required: true
+        toolbar: "basic"
+        placeholder: "Enter your content here..."
+      url:
+        type: url
+        label: "Button URL"
+        placeholder: "https://example.com"
+      btn_text:
+        type: text
+        label: "Button Text"
+        placeholder: "Product Category"
+
+  two_card_pod:
+    name: "Two Card Pod"
+    description: "Displays two cards that link to selected categories"
+    category: "layout"
+    icon: "columns"
+    schema:
+      left_card_image:
+        type: image
+        label: "Left Card Background Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      left_card_overlay:
+        type: image
+        label: "Left Card Overlay Image"
+        required: false
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      left_title:
+        type: text
+        label: "Left Card Title"
+        placeholder: "Left Card Title"
+      left_card_url:
+        type: url
+        label: "Left Card URL"
+        placeholder: "https://example.com"
+      right_card_image:
+        type: image
+        label: "Right Card Background Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      right_card_overlay:
+        type: image
+        label: "Right Card Overlay Image"
+        required: false
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      right_title:
+        type: text
+        label: "Right Card Title"
+        placeholder: "Right Card Title"
+      right_card_url:
+        type: url
+        label: "Right Card URL"
+        placeholder: "https://example.com"
+
+  lifestyle_image_six_prod:
+    name: "Lifestyle Image Six Product"
+    description: "This pod displays a lifestyle image as well as six product cards."
+    category: "content"
+    icon: "image"
+    schema:
+      image:
+        type: image
+        label: "Lifestyle Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      pod_orientation:
+        type: select
+        label: "Pod left right orientation"
+        options:
+          - value: "left"
+            label: "Left"
+          - value: "right"
+            label: "Right"
+        default: "left"
+
+  content_pod_two_card:
+    name: "Content Pod Two Card"
+    description: "Displays a set of two cards with an image in the left card as well as the right card containing a title, text as well as a button link"
+    category: "content"
+    icon: "columns"
+    schema:
+      left_card_image:
+        type: image
+        label: "Left Card Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      title:
+        type: text
+        label: "Title"
+        placeholder: "Card Title"
+      content:
+        type: rich_text
+        label: "Content"
+        required: true
+        toolbar: "basic"
+        placeholder: "Enter your content here..."
+      button_url:
+        type: url
+        label: "Button URL"
+        placeholder: "https://example.com"
+      button_text:
+        type: text
+        label: "Button Text"
+        placeholder: "Product Category"
+
+  two_card_content_banner:
+    name: "Two Card Content Banner"
+    description: "Displays a banner made up of two cards"
+    category: "headers"
+    icon: "banner"
+    schema:
+      small_card_image:
+        type: image
+        label: "Small Card Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      small_card_supertext:
+        type: text
+        label: "Small Card SuperText"
+        placeholder: "Small Card SuperText"
+      small_card_title:
+        type: text
+        label: "Small Card Title"
+        placeholder: "Small Card Title"
+      large_card_background:
+        type: image
+        label: "Large Card Background Image"
+        required: true
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      large_card_overlay:
+        type: image
+        label: "Large Card Overlay Image"
+        required: false
+        crop_ratios: ["4:3", "3:2", "16:9", "1:1"]
+        accept: "image/*"
+      large_card_supertext:
+        type: text
+        label: "Large Card SuperText"
+        placeholder: "Large Card SuperText"
+      large_card_title:
+        type: text
+        label: "Large Card Title"
+        placeholder: "Large Card Title"
+      url:
+        type: url
+        label: "Button URL"
+        placeholder: "https://example.com"
+      button_text:
+        type: text
+        label: "Button Text"
+        placeholder: "Product Category"
+      pod_orientation:
+        type: select
+        label: "Pod left right orientation"
+        options:
+          - value: "left"
+            label: "Left"
+          - value: "right"
+            label: "Right"
+        default: "left"
+
+  new_arrivals_pod:
+    name: "New Arrivals Pod"
+    description: "Displays new arrivals products"
+    category: "content"
+    icon: "star"
+    schema:
+      page_title:
+        type: text
+        label: "Pod Title"
+        placeholder: "New Arrivals"
+
+# ====================
+# CATEGORY DEFINITIONS
+# ====================
+
+#  categories:
+#    content: "Content Blocks"
+#    headers: "Headers & Banners"
+#    layout: "Layout & Structure"
+#    media: "Media & Galleries"
+#    blog: "Blog & Articles"
+#    social_proof: "Social Proof"
+#    forms: "Forms & Contact"
+#    marketing: "Marketing & CTA"
+#    navigation: "Navigation & Footer"
+#    support: "Support & FAQ"

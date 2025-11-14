@@ -1,0 +1,14 @@
+<%= link_to blog_path(blog), class: "border-b-1 border-dark pb-3" do %>
+    <div class="bg-grey-custom flex justify-center items-center h-[300px] lg:h-[400px] rounded-xl overflow-hidden">   
+        <%= image_tag serve_image_remote_url(blog.cover_image), class:"w-full" if blog.cover_image.present? %>
+    </div>
+    <p class="product-label !ps-0">
+        <%= blog.display_title %>
+    </p>
+    <p class="text-sm mt-2">
+        By <%= blog.author_name %> | 
+        <% if blog.published_at.present? %>
+            <time datetime="<%= blog.published_at.iso8601 %>"><%= blog.published_at.strftime("%b %d, %Y") %></time>
+        <% end %>
+    </p>
+<% end %>

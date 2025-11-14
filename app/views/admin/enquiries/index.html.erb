@@ -1,0 +1,181 @@
+<% content_for :page_title, @showing_spam ? "Spam Enquiries" : "Enquiries" %>
+
+<div class="space-y-6">
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total</div>
+      <div class="text-2xl font-bold text-card-foreground mt-1"><%= @stats[:total] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Pending</div>
+      <div class="text-2xl font-bold text-warning mt-1"><%= @stats[:pending] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Read</div>
+      <div class="text-2xl font-bold text-primary mt-1"><%= @stats[:read] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Resolved</div>
+      <div class="text-2xl font-bold text-success mt-1"><%= @stats[:resolved] %></div>
+    </div>
+    <div class="bg-card border border-border rounded-lg p-4">
+      <div class="text-xs font-medium text-muted-foreground uppercase tracking-wide">Spam</div>
+      <div class="text-2xl font-bold text-destructive mt-1"><%= @stats[:spam] %></div>
+    </div>
+  </div>
+
+  <div class="bg-card border border-border rounded-lg shadow-sm">
+    <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-border px-6 py-4">
+      <div class="flex items-center gap-2">
+        <%= admin_icon("enquiries", class: "w-5 h-5 text-muted-foreground") %>
+        <h2 class="text-lg font-semibold text-card-foreground"><%= @showing_spam ? "Spam Enquiries" : "Enquiries" %></h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <% if @showing_spam %>
+          <%= link_to admin_enquiries_path, class: "btn-secondary-sm" do %>
+            View Active Enquiries
+          <% end %>
+          <% if @enquiries.any? %>
+            <%= button_to clear_spam_admin_enquiries_path,
+                          method: :delete,
+                          data: { turbo_confirm: "Are you sure you want to delete all spam enquiries? This cannot be undone." },
+                          class: "btn-danger-sm" do %>
+              Clear All Spam
+            <% end %>
+          <% end %>
+        <% else %>
+          <%= link_to admin_enquiries_path(spam: true), class: "btn-secondary-sm" do %>
+            View Spam (<%= @stats[:spam] %>)
+          <% end %>
+        <% end %>
+        <%= link_to admin_enquiries_path, class: "btn-secondary-sm" do %>
+          Reset Filters
+        <% end %>
+      </div>
+    </div>
+
+    <% unless @showing_spam %>
+      <div class="border-b border-border px-6 py-4 bg-muted/40">
+        <%= form_with url: admin_enquiries_path, method: :get, local: true, class: "grid grid-cols-1 md:grid-cols-4 gap-4" do |f| %>
+          <div>
+            <label for="status" class="form-label text-xs">Status</label>
+            <%= select_tag :status,
+                           options_for_select([["All", ""], ["Pending", "pending"], ["Read", "read"], ["Resolved", "resolved"]], params[:status]),
+                           class: "form-select" %>
+          </div>
+          <div>
+            <label for="email" class="form-label text-xs">Email</label>
+            <%= text_field_tag :email, params[:email], placeholder: "Search by email", class: "form-input" %>
+          </div>
+          <div>
+            <label for="name" class="form-label text-xs">Name</label>
+            <%= text_field_tag :name, params[:name], placeholder: "Search by name", class: "form-input" %>
+          </div>
+          <div class="flex items-end">
+            <%= f.submit "Apply", class: "btn-primary-sm w-full" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-border">
+        <thead class="bg-muted/40">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Name</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Message Preview</th>
+          <% unless @showing_spam %>
+            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+          <% end %>
+          <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Date</th>
+          <th class="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="bg-card divide-y divide-border">
+        <% @enquiries.each do |enquiry| %>
+          <tr class="hover:bg-muted/40 transition-colors">
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-card-foreground"><%= enquiry.name %></div>
+              <% if enquiry.company.present? %>
+                <div class="text-xs text-muted-foreground"><%= enquiry.company %></div>
+              <% end %>
+            </td>
+            <td class="px-6 py-4 text-sm text-card-foreground">
+              <a href="mailto:<%= enquiry.email %>" class="text-primary hover:underline"><%= enquiry.email %></a>
+              <% if enquiry.phone.present? %>
+                <div class="text-xs text-muted-foreground"><%= enquiry.phone %></div>
+              <% end %>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-muted-foreground max-w-md truncate">
+                <%= enquiry.message.to_s.truncate(80) %>
+              </div>
+            </td>
+            <% unless @showing_spam %>
+              <td class="px-6 py-4">
+                <% case enquiry.status %>
+                <% when "pending" %>
+                  <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-warning/10 text-warning">
+                    Pending
+                  </span>
+                <% when "read" %>
+                  <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                    Read
+                  </span>
+                <% when "resolved" %>
+                  <span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-success/10 text-success">
+                    Resolved
+                  </span>
+                <% end %>
+              </td>
+            <% end %>
+            <td class="px-6 py-4 text-sm text-muted-foreground">
+              <%= enquiry.created_at.strftime("%b %d, %Y") %><br>
+              <span class="text-xs"><%= enquiry.created_at.strftime("%I:%M %p") %></span>
+            </td>
+            <td class="px-6 py-4 text-right text-sm">
+              <div class="flex items-center justify-end gap-2">
+                <% if @showing_spam %>
+                  <%= button_to mark_as_not_spam_admin_enquiry_path(enquiry),
+                                method: :patch,
+                                class: "p-2 rounded text-success hover:bg-success/10 transition-colors",
+                                title: "Not Spam" do %>
+                    <%= action_icon("check", class: "w-4 h-4") %>
+                  <% end %>
+                <% else %>
+                  <%= link_to admin_enquiry_path(enquiry),
+                              class: "p-2 rounded text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors",
+                              title: "View" do %>
+                    <%= action_icon("show", class: "w-4 h-4") %>
+                  <% end %>
+                  <%= button_to mark_as_spam_admin_enquiry_path(enquiry),
+                                method: :patch,
+                                class: "p-2 rounded text-warning hover:bg-warning/10 transition-colors",
+                                title: "Mark as Spam" do %>
+                    <%= action_icon("flag", class: "w-4 h-4") %>
+                  <% end %>
+                <% end %>
+                <%= button_to admin_enquiry_path(enquiry),
+                              method: :delete,
+                              data: { turbo_confirm: "Delete this enquiry?" },
+                              class: "p-2 rounded text-destructive hover:bg-destructive/10 transition-colors",
+                              title: "Delete" do %>
+                  <%= action_icon("delete", class: "w-4 h-4") %>
+                <% end %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+        <% if @enquiries.empty? %>
+          <tr>
+            <td colspan="<%= @showing_spam ? 5 : 6 %>" class="px-6 py-10 text-center text-sm text-muted-foreground">
+              <%= @showing_spam ? "No spam enquiries." : "No enquiries found. Try adjusting filters." %>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

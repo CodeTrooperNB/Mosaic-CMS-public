@@ -1,0 +1,104 @@
+<% if admin_user.errors.any? %>
+  <div class="mb-6 border border-destructive/20 bg-destructive/10 rounded-md p-4">
+    <div class="flex gap-3">
+      <%= status_icon("error", class: "w-5 h-5 text-destructive shrink-0 mt-0.5") %>
+      <div>
+        <h3 class="font-medium text-destructive text-sm">Please fix the following errors:</h3>
+        <ul class="mt-2 text-sm text-destructive space-y-1">
+          <% admin_user.errors.full_messages.each do |msg| %>
+            <li class="flex items-start gap-1">
+              <span class="text-destructive mt-1">•</span>
+              <%= msg %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="space-y-6">
+  <!-- Personal Information -->
+  <div class="space-y-4">
+    <h3 class="font-medium text-card-foreground border-b border-border pb-2">Personal Information</h3>
+    <div class="grid form-grid gap-4 grid-cols-2">
+      <div class="form-group">
+        <%= f.label :first_name, class: "form-label" %>
+        <%= f.text_field :first_name, required: true,
+                         class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if admin_user.errors[:first_name].present?}",
+                         placeholder: "John" %>
+        <% if admin_user.errors[:first_name].present? %>
+          <p class="form-error"><%= admin_user.errors[:first_name].first %></p>
+        <% end %>
+      </div>
+      <div class="form-group">
+        <%= f.label :last_name, class: "form-label" %>
+        <%= f.text_field :last_name, required: true,
+                         class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if admin_user.errors[:last_name].present?}",
+                         placeholder: "Doe" %>
+        <% if admin_user.errors[:last_name].present? %>
+          <p class="form-error"><%= admin_user.errors[:last_name].first %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Information -->
+  <div class="space-y-4">
+    <h3 class="font-medium text-card-foreground border-b border-border pb-2">Account Information</h3>
+    <div class="form-group">
+      <%= f.label :email, class: "form-label" %>
+      <%= f.email_field :email, required: true,
+                        class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if admin_user.errors[:email].present?}",
+                        placeholder: "john@example.com" %>
+      <% if admin_user.errors[:email].present? %>
+        <p class="form-error"><%= admin_user.errors[:email].first %></p>
+      <% end %>
+    </div>
+    <div class="form-group">
+      <%= f.label :role, class: "form-label" %>
+      <%= f.select :role,
+                   options_for_select(AdminUser.roles.map { |key, value| [key.humanize, key] }, admin_user.role),
+                   { prompt: "Select a role" },
+                   { class: "form-select #{'border-destructive focus:border-destructive focus:ring-destructive/20' if admin_user.errors[:role].present?}" } %>
+      <% if admin_user.errors[:role].present? %>
+        <p class="form-error"><%= admin_user.errors[:role].first %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Password -->
+  <%# if admin_user.new_record? %>
+    <div class="space-y-4">
+      <h3 class="font-medium text-card-foreground border-b border-border pb-2">Security</h3>
+      <div class="grid form-grid gap-4 sm:grid-cols-2">
+        <div class="form-group">
+          <%= f.label :password, class: "form-label" %>
+          <%= f.password_field :password, required: admin_user.new_record?,
+                               class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if admin_user.errors[:password].present?}" %>
+          <% if admin_user.errors[:password].present? %>
+            <p class="form-error"><%= admin_user.errors[:password].first %></p>
+          <% end %>
+        </div>
+        <div class="form-group">
+          <%= f.label :password_confirmation, class: "form-label" %>
+          <%= f.password_field :password_confirmation, required: admin_user.new_record?,
+                               class: "form-input #{'border-destructive focus:border-destructive focus:ring-destructive/20' if admin_user.errors[:password_confirmation].present?}" %>
+          <% if admin_user.errors[:password_confirmation].present? %>
+            <p class="form-error"><%= admin_user.errors[:password_confirmation].first %></p>
+          <% end %>
+        </div>
+      </div>
+      <% unless admin_user.new_record? %>
+        <small class="text-xs text-muted-foreground">
+          <em>Leave password fields blank if unchanged. Minimum <%= Devise.password_length.min %> characters</em>
+        </small>
+      <% end %>
+    </div>
+
+  <!-- Actions -->
+  <div class="flex items-center gap-3 pt-6 border-t border-border">
+    <%= f.submit submit_label, class: "btn-primary-sm" %>
+    <%= link_to "Cancel", admin_admin_users_path, class: "btn-secondary-sm" %>
+  </div>
+</div>

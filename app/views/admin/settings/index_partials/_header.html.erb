@@ -1,0 +1,11 @@
+<div class="p-6 border-b border-border">
+  <div class="flex items-center gap-2">
+    <%= admin_icon("settings", class: "w-5 h-5 text-muted-foreground") %>
+    <h2 class="text-lg font-semibold text-card-foreground">Application Settings</h2>
+  </div>
+  <p class="mt-1 text-sm text-gray-600 dark:text-white">
+    These settings are dynamically loaded from <code>config/settings.yml</code>, environment variables,
+    and any local overrides (e.g., <code>config/settings.local.yml</code>).
+    This view provides a read-only overview of the current configuration.
+  </p>
+</div>
